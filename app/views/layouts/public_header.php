@@ -53,8 +53,12 @@
         .navbar-brand {
             font-weight: 800;
             color: #233446 !important;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             letter-spacing: -0.5px;
+        }
+
+        @media (min-width: 992px) {
+            .navbar-brand { font-size: 1.5rem; }
         }
 
         .nav-link-modern {
@@ -99,6 +103,7 @@
 
         .main-content {
             min-height: 80vh;
+            padding-top: 10px; /* Tambahkan sedikit jarak agar konten tidak mepet navbar */
         }
 
         .footer-modern {
@@ -163,8 +168,8 @@
                 <span><?= APP_NAME ?></span>
             </a>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler menu-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="bx bx-menu" style="font-size: 1.8rem; color: #233446; transition: transform 0.2s ease;"></i>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -308,6 +313,37 @@
             } else {
                 document.querySelector('.navbar-modern').classList.remove('scrolled');
             }
+        });
+
+        var menuBtn = document.querySelector('.menu-toggle-btn');
+        var menuIcon = menuBtn.querySelector('i');
+
+        menuBtn.addEventListener('click', function() {
+            if (menuIcon.classList.contains('bx-menu')) {
+                menuIcon.style.transform = 'rotate(90deg)';
+                setTimeout(function() {
+                    menuIcon.classList.remove('bx-menu');
+                    menuIcon.classList.add('bx-x');
+                    menuIcon.style.transform = 'rotate(0deg)';
+                }, 150);
+            } else {
+                menuIcon.style.transform = 'rotate(90deg)';
+                setTimeout(function() {
+                    menuIcon.classList.remove('bx-x');
+                    menuIcon.classList.add('bx-menu');
+                    menuIcon.style.transform = 'rotate(0deg)';
+                }, 150);
+            }
+        });
+
+        document.getElementById('navbarNav').addEventListener('show.bs.collapse', function() {
+            menuIcon.classList.remove('bx-menu');
+            menuIcon.classList.add('bx-x');
+        });
+
+        document.getElementById('navbarNav').addEventListener('hide.bs.collapse', function() {
+            menuIcon.classList.remove('bx-x');
+            menuIcon.classList.add('bx-menu');
         });
     </script>
     <?= $pageScripts ?? '' ?>
