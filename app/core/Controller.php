@@ -79,6 +79,16 @@ class Controller
         }
     }
 
+    protected function requireEmployee()
+    {
+        $this->requireLogin();
+        $role = $_SESSION['user']['role'] ?? '';
+        if (!in_array($role, ['admin', 'karyawan'])) {
+            $this->setFlash('danger', 'Akses ditolak');
+            $this->redirect('dashboard');
+        }
+    }
+
     protected function auth()
     {
         return $_SESSION['user'] ?? null;

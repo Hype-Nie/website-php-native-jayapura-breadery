@@ -19,6 +19,9 @@
             </a>
         </div>
     </div>
+    <style>
+        .table-responsive { min-height: 200px; }
+    </style>
     <div class="table-responsive text-nowrap">
         <table class="table">
             <thead>
@@ -44,7 +47,7 @@
                                 <?php if ($u->role === 'admin'): ?>
                                     <span class="badge bg-label-danger">Admin</span>
                                 <?php else: ?>
-                                    <span class="badge bg-label-primary">Kasir</span>
+                                    <span class="badge bg-label-primary">Karyawan</span>
                                 <?php endif; ?>
                             </td>
                             <td>
@@ -52,7 +55,7 @@
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu dropdown-menu-end">
                                         <a class="dropdown-item" href="<?= BASE_URL ?>users/edit/<?= $u->id ?>">
                                             <i class="bx bx-edit-alt me-1"></i> Edit
                                         </a>

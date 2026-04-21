@@ -46,11 +46,11 @@
             <div class="card-body">
                 <div class="card-title d-flex align-items-start justify-content-between">
                     <div class="avatar flex-shrink-0">
-                        <span class="avatar-initial rounded bg-label-danger"><i class="bx bx-store"></i></span>
+                        <span class="avatar-initial rounded bg-label-warning"><i class="bx bx-time"></i></span>
                     </div>
                 </div>
-                <span class="fw-semibold d-block mb-1">Pembelian Bulan Ini</span>
-                <h3 class="card-title mb-2">Rp <?= number_format($monthlyPurchases ?? 0, 0, ',', '.') ?></h3>
+                <span class="fw-semibold d-block mb-1">Pesanan Pending</span>
+                <h3 class="card-title mb-2"><?= $pendingOrders ?? 0 ?></h3>
             </div>
         </div>
     </div>
@@ -116,44 +116,89 @@
 </div>
 
 <!-- Recent Transactions -->
-<div class="card">
-    <div class="card-header d-flex align-items-center justify-content-between">
-        <h5 class="mb-0">Transaksi Terakhir</h5>
-        <a href="<?= BASE_URL ?>transactions" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
-    </div>
-    <div class="table-responsive text-nowrap">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Kode</th>
-                    <th>Tanggal</th>
-                    <th>Total</th>
-                    <th>Bayar</th>
-                    <th>Kembalian</th>
-                </tr>
-            </thead>
-            <tbody class="table-border-bottom-0">
-                <?php if (!empty($recentTransactions)): ?>
-                    <?php foreach ($recentTransactions as $trx): ?>
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <div>
+                    <h5 class="mb-0">2 Penjualan Kasir Terakhir</h5>
+                    <small class="text-muted">Transaksi langsung di toko</small>
+                </div>
+                <a href="<?= BASE_URL ?>transactions" class="btn btn-sm btn-outline-primary">Semua</a>
+            </div>
+            <div class="table-responsive text-nowrap">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>
-                                <a href="<?= BASE_URL ?>transactions/detail/<?= $trx->id ?>">
-                                    <strong><?= $trx->transaction_code ?></strong>
-                                </a>
-                            </td>
-                            <td><?= date('d/m/Y H:i', strtotime($trx->transaction_date)) ?></td>
-                            <td>Rp <?= number_format($trx->total_amount, 0, ',', '.') ?></td>
-                            <td>Rp <?= number_format($trx->payment_amount, 0, ',', '.') ?></td>
-                            <td>Rp <?= number_format($trx->change_amount, 0, ',', '.') ?></td>
+                            <th>Kode</th>
+                            <th>Total</th>
+                            <th>Status</th>
                         </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5" class="text-center py-4 text-muted">Belum ada transaksi</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        <?php if (!empty($recentTransactions)): ?>
+                            <?php foreach (array_slice($recentTransactions, 0, 2) as $trx): ?>
+                                <tr>
+                                    <td>
+                                        <a href="<?= BASE_URL ?>transactions/detail/<?= $trx->id ?>">
+                                            <strong><?= $trx->transaction_code ?></strong>
+                                        </a>
+                                    </td>
+                                    <td>Rp <?= number_format($trx->total_amount, 0, ',', '.') ?></td>
+                                    <td><span class="badge bg-label-success">Selesai</span></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">Belum ada transaksi</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <div>
+                    <h5 class="mb-0">2 Pesanan Website Terakhir</h5>
+                    <small class="text-muted">Pesanan dari pelanggan (Landing Page)</small>
+                </div>
+                <a href="<?= BASE_URL ?>orders" class="btn btn-sm btn-outline-warning">Semua</a>
+            </div>
+            <div class="table-responsive text-nowrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Kode</th>
+                            <th>Pelanggan</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        <?php if (!empty($recentOrders)): ?>
+                            <?php foreach (array_slice($recentOrders, 0, 2) as $ord): ?>
+                                <tr>
+                                    <td>
+                                        <a href="<?= BASE_URL ?>orders/detail/<?= $ord->id ?>">
+                                            <strong><?= $ord->order_code ?></strong>
+                                        </a>
+                                    </td>
+                                    <td><?= htmlspecialchars($ord->customer_name) ?></td>
+                                    <td>Rp <?= number_format($ord->total_amount, 0, ',', '.') ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">Belum ada pesanan</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 

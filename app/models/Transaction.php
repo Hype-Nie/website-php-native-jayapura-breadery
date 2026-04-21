@@ -67,9 +67,11 @@ class Transaction extends Model
     public function getTodaySales()
     {
         $stmt = $this->db->prepare("
-            SELECT COALESCE(SUM(total_amount), 0) as total
-            FROM {$this->table}
-            WHERE DATE(transaction_date) = CURDATE()
+            SELECT SUM(total) as total FROM (
+                SELECT COALESCE(SUM(total_amount), 0) as total FROM transactions WHERE DATE(transaction_date) = CURDATE()
+                UNION ALL
+                SELECT COALESCE(SUM(total_amount), 0) as total FROM customer_orders WHERE DATE(created_at) = CURDATE() AND status = 'paid'
+            ) combined
         ");
         $stmt->execute();
         return (int) $stmt->fetch()->total;
@@ -78,9 +80,11 @@ class Transaction extends Model
     public function getTodayCount()
     {
         $stmt = $this->db->prepare("
-            SELECT COUNT(*) as c
-            FROM {$this->table}
-            WHERE DATE(transaction_date) = CURDATE()
+            SELECT SUM(count) as c FROM (
+                SELECT COUNT(*) as count FROM transactions WHERE DATE(transaction_date) = CURDATE()
+                UNION ALL
+                SELECT COUNT(*) as count FROM customer_orders WHERE DATE(created_at) = CURDATE() AND status = 'paid'
+            ) combined
         ");
         $stmt->execute();
         return (int) $stmt->fetch()->c;
@@ -101,15 +105,22 @@ class Transaction extends Model
     public function getDailySales($days = 7)
     {
         $stmt = $this->db->prepare("
-            SELECT DATE(transaction_date) as date,
-                   COALESCE(SUM(total_amount), 0) as total,
-                   COUNT(*) as count
-            FROM {$this->table}
-            WHERE transaction_date >= DATE_SUB(CURDATE(), INTERVAL :d DAY)
-            GROUP BY DATE(transaction_date)
+            SELECT date, SUM(total) as total, SUM(count) as count FROM (
+                SELECT DATE(transaction_date) as date, SUM(total_amount) as total, COUNT(*) as count 
+                FROM transactions 
+                WHERE transaction_date >= DATE_SUB(CURDATE(), INTERVAL :d1 DAY)
+                GROUP BY DATE(transaction_date)
+                UNION ALL
+                SELECT DATE(created_at) as date, SUM(total_amount) as total, COUNT(*) as count 
+                FROM customer_orders 
+                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL :d2 DAY) AND status = 'paid'
+                GROUP BY DATE(created_at)
+            ) combined
+            GROUP BY date
             ORDER BY date ASC
         ");
-        $stmt->bindValue(':d', (int)$days, PDO::PARAM_INT);
+        $stmt->bindValue(':d1', (int)$days, PDO::PARAM_INT);
+        $stmt->bindValue(':d2', (int)$days, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -118,10 +129,13 @@ class Transaction extends Model
     public function getMonthlyTotal()
     {
         $stmt = $this->db->prepare("
-            SELECT COALESCE(SUM(total_amount), 0) as total
-            FROM {$this->table}
-            WHERE MONTH(transaction_date) = MONTH(CURDATE())
-              AND YEAR(transaction_date) = YEAR(CURDATE())
+            SELECT SUM(total) as total FROM (
+                SELECT COALESCE(SUM(total_amount), 0) as total FROM transactions 
+                WHERE MONTH(transaction_date) = MONTH(CURDATE()) AND YEAR(transaction_date) = YEAR(CURDATE())
+                UNION ALL
+                SELECT COALESCE(SUM(total_amount), 0) as total FROM customer_orders 
+                WHERE MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE()) AND status = 'paid'
+            ) combined
         ");
         $stmt->execute();
         return (int) $stmt->fetch()->total;

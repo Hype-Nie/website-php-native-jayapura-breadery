@@ -19,7 +19,7 @@
                 </div>
             <?php endif; ?>
 
-            <form method="POST" action="<?= BASE_URL ?>products/add">
+            <form method="POST" action="<?= BASE_URL ?>products/add" enctype="multipart/form-data">
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label" for="barcode">Barcode</label>
                     <div class="col-sm-10">
@@ -83,6 +83,13 @@
                         <input type="number" class="form-control" id="stock" name="stock"
                             value="<?= $old['stock'] ?? '' ?>"
                             placeholder="0" min="0" required />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" for="image">Gambar</label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" />
+                        <small class="text-muted">Format: JPG, PNG, GIF. Maks 2MB.</small>
                     </div>
                 </div>
                 <div class="row justify-content-end">

@@ -19,11 +19,15 @@
             </a>
         </div>
     </div>
+    <style>
+        .table-responsive { min-height: 200px; }
+    </style>
     <div class="table-responsive text-nowrap">
         <table class="table">
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Gambar</th>
                     <th>Barcode</th>
                     <th>Nama Produk</th>
                     <th>Kategori</th>
@@ -38,6 +42,16 @@
                         <tr>
                             <td><?= $i + 1 ?></td>
                             <td><code><?= htmlspecialchars($product->barcode) ?></code></td>
+                            <td>
+                                <?php
+                                $imgPath = !empty($product->image) ? BASE_URL . 'assets/img/products/' . $product->image : null;
+                                if ($imgPath): ?>
+                                    <img src="<?= $imgPath ?>" alt="<?= htmlspecialchars($product->name) ?>"
+                                        class="rounded" style="height:40px;width:40px;object-fit:cover;" />
+                                <?php else: ?>
+                                    <i class="bx bx-qrcode text-muted"></i>
+                                <?php endif; ?>
+                            </td>
                             <td><strong><?= htmlspecialchars($product->name) ?></strong></td>
                             <td>
                                 <?php if ($product->category): ?>
@@ -61,7 +75,7 @@
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu dropdown-menu-end">
                                         <a class="dropdown-item" href="<?= BASE_URL ?>products/edit/<?= $product->id ?>">
                                             <i class="bx bx-edit-alt me-1"></i> Edit
                                         </a>
@@ -77,8 +91,8 @@
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <tr>
-                        <td colspan="7" class="text-center py-4 text-muted">
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">
                             <i class="bx bx-package bx-lg"></i>
                             <p class="mt-2 mb-0">
                                 <?= !empty($search) ? 'Tidak ditemukan produk dengan kata kunci tersebut' : 'Belum ada produk. <a href="' . BASE_URL . 'products/add">Tambah sekarang</a>' ?>
