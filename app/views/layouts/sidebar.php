@@ -2,11 +2,11 @@
     <div class="app-brand demo">
         <a href="<?= BASE_URL ?>" class="app-brand-link">
             <span class="app-brand-logo demo">
-                <img src="<?= BASE_URL ?>assets/img/logo/logo-96.png" alt="Logo <?= APP_NAME ?>" width="42" height="42" loading="eager" fetchpriority="high" decoding="async" />
+                <img src="<?= BASE_URL ?>assets/img/logo/logo.png" alt="<?= APP_NAME ?>" width="42" height="42" style="border-radius:50%;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,0.08);" loading="eager" fetchpriority="high" decoding="async" />
             </span>
             <div class="app-brand-text-wrapper demo">
                 <span class="app-brand-text demo menu-text fw-bolder"><?= APP_NAME ?></span>
-                <div class="app-brand-subtitle demo">By : Cicipung</div>
+                <div class="app-brand-subtitle demo">by Cicipung</div>
             </div>
         </a>
 

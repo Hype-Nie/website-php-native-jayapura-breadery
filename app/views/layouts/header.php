@@ -20,7 +20,7 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="<?= BASE_URL ?>assets/img/logo/logo.png" />
-    <link rel="preload" as="image" href="<?= BASE_URL ?>assets/img/logo/logo-96.png" />
+
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
