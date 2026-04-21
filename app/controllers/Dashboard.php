@@ -9,6 +9,7 @@ class Dashboard extends Controller
         $transactionModel = $this->model('Transaction');
         $productModel = $this->model('Product');
         $purchaseModel = $this->model('Purchase');
+        $orderModel = $this->model('Order');
 
         $data = [
             'title'              => 'Dashboard',
@@ -19,7 +20,9 @@ class Dashboard extends Controller
             'totalProducts'      => $productModel->countAll(),
             'lowStockProducts'   => $productModel->getLowStock(10),
             'recentTransactions' => $transactionModel->getRecent(5),
-            'dailySales'         => $transactionModel->getDailySales(7)
+            'recentOrders'       => $orderModel->getRecent(5),
+            'dailySales'         => $transactionModel->getDailySales(7),
+            'pendingOrders'     => $orderModel->countByStatus('pending')
         ];
 
         $this->view('dashboard/index', $data);

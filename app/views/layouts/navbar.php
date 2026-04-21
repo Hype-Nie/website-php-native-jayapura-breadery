@@ -16,8 +16,8 @@
                     type="text"
                     class="form-control border-0 shadow-none"
                     id="globalSearch"
-                    placeholder="Cari produk..."
-                    aria-label="Cari produk..."
+                    placeholder="Cari kode pesanan / nama pelanggan..."
+                    aria-label="Cari pesanan..."
                     autocomplete="off" />
             </div>
         </div>
@@ -47,7 +47,7 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <span class="fw-semibold d-block"><?= htmlspecialchars($user['name'] ?? 'User') ?></span>
-                                    <small class="text-muted"><?= ucfirst($user['role'] ?? 'kasir') ?></small>
+                                    <small class="text-muted"><?= ucfirst($user['role'] ?? 'karyawan') ?></small>
                                 </div>
                             </div>
                         </a>
@@ -83,7 +83,7 @@
         if (searchInput) {
             searchInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && this.value.trim()) {
-                    window.location.href = BASE_URL + 'products?q=' + encodeURIComponent(this.value.trim());
+                    window.location.href = BASE_URL + 'orders?q=' + encodeURIComponent(this.value.trim());
                 }
             });
         }

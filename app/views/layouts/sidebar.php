@@ -1,3 +1,4 @@
+<?php $role = $_SESSION['user']['role'] ?? ''; ?>
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         <a href="<?= BASE_URL ?>" class="app-brand-link">
@@ -17,10 +18,9 @@
 
     <div class="menu-inner-shadow"></div>
 
-    <?php $t = $title ?? '';
-    $role = $_SESSION['user']['role'] ?? ''; ?>
+    <?php $t = $title ?? ''; ?>
     <ul class="menu-inner py-1">
-        <!-- Dashboard -->
+        <?php if ($role === 'admin' || $role === 'karyawan'): ?>
         <li class="menu-item <?= $t === 'Dashboard' ? 'active' : '' ?>">
             <a href="<?= BASE_URL ?>dashboard" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
@@ -29,20 +29,27 @@
         </li>
 
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Penjualan</span>
+            <span class="menu-header-text">Pesanan & Penjualan</span>
         </li>
 
-        <li class="menu-item <?= $t === 'Transaksi Baru' ? 'active' : '' ?>">
+        <li class="menu-item <?= $t === 'Penjualan Baru' ? 'active' : '' ?>">
             <a href="<?= BASE_URL ?>transactions/create" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-cart"></i>
-                <div>Transaksi Baru</div>
+                <i class="menu-icon tf-icons bx bx-cart-alt"></i>
+                <div>Penjualan Baru</div>
             </a>
         </li>
 
-        <li class="menu-item <?= in_array($t, ['Riwayat Transaksi', 'Detail Transaksi']) ? 'active' : '' ?>">
+        <li class="menu-item <?= in_array($t, ['Riwayat Penjualan', 'Detail Penjualan']) ? 'active' : '' ?>">
             <a href="<?= BASE_URL ?>transactions" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-receipt"></i>
+                <i class="menu-icon tf-icons bx bx-spreadsheet"></i>
                 <div>Riwayat Penjualan</div>
+            </a>
+        </li>
+
+        <li class="menu-item <?= in_array($t, ['Pesanan Pelanggan', 'Detail Pesanan']) ? 'active' : '' ?>">
+            <a href="<?= BASE_URL ?>orders" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-receipt"></i>
+                <div>Daftar Pesanan</div>
             </a>
         </li>
 
@@ -108,16 +115,17 @@
         </li>
 
         <?php if ($role === 'admin'): ?>
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">Pengaturan</span>
-            </li>
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Pengaturan</span>
+        </li>
 
-            <li class="menu-item <?= in_array($t, ['Manajemen User', 'Tambah User', 'Edit User']) ? 'active' : '' ?>">
-                <a href="<?= BASE_URL ?>users" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-group"></i>
-                    <div>Manajemen User</div>
-                </a>
-            </li>
+        <li class="menu-item <?= in_array($t, ['Manajemen User', 'Tambah User', 'Edit User']) ? 'active' : '' ?>">
+            <a href="<?= BASE_URL ?>users" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-group"></i>
+                <div>Manajemen User</div>
+            </a>
+        </li>
+        <?php endif; ?>
         <?php endif; ?>
     </ul>
 </aside>
