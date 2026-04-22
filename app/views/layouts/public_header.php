@@ -37,9 +37,9 @@
             background-color: #fcfcfd;
         }
 
-        .navbar-modern {
+.navbar-modern {
             padding: 15px 0;
-            background: rgba(255, 255, 255, 0.8) !important;
+            background: rgba(255, 255, 255, 0.98) !important;
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
             transition: all 0.3s ease;
@@ -103,7 +103,7 @@
 
         .main-content {
             min-height: 80vh;
-            padding-top: 10px; /* Tambahkan sedikit jarak agar konten tidak mepet navbar */
+            padding-top: 10px;
         }
 
         .footer-modern {
@@ -161,7 +161,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg sticky-top navbar-modern">
+    <nav class="navbar navbar-expand-lg navbar-modern">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL ?>">
                 <img src="<?= BASE_URL ?>assets/img/logo/logo.png" alt="<?= APP_NAME ?>" width="56" height="56" style="border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,0.15);" />
@@ -318,32 +318,16 @@
         var menuBtn = document.querySelector('.menu-toggle-btn');
         var menuIcon = menuBtn.querySelector('i');
 
-        menuBtn.addEventListener('click', function() {
-            if (menuIcon.classList.contains('bx-menu')) {
-                menuIcon.style.transform = 'rotate(90deg)';
-                setTimeout(function() {
-                    menuIcon.classList.remove('bx-menu');
-                    menuIcon.classList.add('bx-x');
-                    menuIcon.style.transform = 'rotate(0deg)';
-                }, 150);
-            } else {
-                menuIcon.style.transform = 'rotate(90deg)';
-                setTimeout(function() {
-                    menuIcon.classList.remove('bx-x');
-                    menuIcon.classList.add('bx-menu');
-                    menuIcon.style.transform = 'rotate(0deg)';
-                }, 150);
-            }
-        });
-
-        document.getElementById('navbarNav').addEventListener('show.bs.collapse', function() {
+        document.getElementById('navbarNav').addEventListener('shown.bs.collapse', function() {
             menuIcon.classList.remove('bx-menu');
             menuIcon.classList.add('bx-x');
+            menuIcon.style.transform = 'rotate(0deg)';
         });
 
-        document.getElementById('navbarNav').addEventListener('hide.bs.collapse', function() {
+        document.getElementById('navbarNav').addEventListener('hidden.bs.collapse', function() {
             menuIcon.classList.remove('bx-x');
             menuIcon.classList.add('bx-menu');
+            menuIcon.style.transform = 'rotate(0deg)';
         });
     </script>
     <?= $pageScripts ?? '' ?>
