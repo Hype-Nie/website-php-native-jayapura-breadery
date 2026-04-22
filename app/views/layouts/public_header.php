@@ -37,13 +37,12 @@
             background-color: #fcfcfd;
         }
 
-        .navbar-modern {
+.navbar-modern {
             padding: 15px 0;
             background: rgba(255, 255, 255, 0.8) !important;
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
             transition: all 0.3s ease;
-            z-index: 1040;
         }
 
         .navbar-modern.scrolled {
@@ -105,8 +104,6 @@
         .main-content {
             min-height: 80vh;
             padding-top: 10px;
-            position: relative;
-            z-index: 1;
         }
 
         .footer-modern {
