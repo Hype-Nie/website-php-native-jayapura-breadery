@@ -1,0 +1,23 @@
+# Product images - uploaded by users (DONT COMMIT)
+public/assets/img/products/*
+!public/assets/img/products/.gitkeep
+
+# uploads
+storage/*.jpg
+storage/*.png
+storage/*.gif
+storage/*.jpeg
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
