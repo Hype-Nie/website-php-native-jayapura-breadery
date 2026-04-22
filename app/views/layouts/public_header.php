@@ -39,7 +39,7 @@
 
 .navbar-modern {
             padding: 15px 0;
-            background: rgba(255, 255, 255, 0.8) !important;
+            background: rgba(255, 255, 255, 0.98) !important;
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(0,0,0,0.05);
             transition: all 0.3s ease;
@@ -161,7 +161,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg sticky-top navbar-modern">
+    <nav class="navbar navbar-expand-lg navbar-modern">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL ?>">
                 <img src="<?= BASE_URL ?>assets/img/logo/logo.png" alt="<?= APP_NAME ?>" width="56" height="56" style="border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,0.15);" />
