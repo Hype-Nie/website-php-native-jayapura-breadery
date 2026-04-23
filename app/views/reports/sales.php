@@ -22,7 +22,7 @@
                     <i class="bx bx-file me-1"></i> Export Excel
                 </a>
                 <a href="<?= BASE_URL ?>reports/printSales?from=<?= $from ?>&to=<?= $to ?>" class="btn btn-outline-secondary" target="_blank">
-                    <i class="bx bx-printer me-1"></i> Cetak PDF
+                    <i class="bx bx-printer me-1"></i> Cetak
                 </a>
             </div>
         </form>
@@ -51,7 +51,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <small class="text-muted d-block">Jumlah Transaksi</small>
-                        <h4 class="mb-0"><?= count($transactions) ?></h4>
+                        <h4 class="mb-0"><?= count($sales) ?></h4>
                     </div>
                     <div class="avatar bg-label-info">
                         <span class="avatar-initial rounded"><i class="bx bx-receipt"></i></span>
@@ -83,41 +83,61 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Kode Transaksi</th>
+                    <th>Kode</th>
                     <th>Tanggal</th>
+                    <th>Sumber</th>
                     <th>Total</th>
                     <th>Bayar</th>
                     <th>Kembalian</th>
-                    <th>Kasir</th>
+                    <th>Keterangan</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if (!empty($transactions)): ?>
-                    <?php foreach ($transactions as $i => $t): ?>
+                <?php if (!empty($sales)): ?>
+                    <?php foreach ($sales as $i => $s): ?>
                         <tr>
                             <td><?= $i + 1 ?></td>
                             <td>
-                                <a href="<?= BASE_URL ?>transactions/detail/<?= $t->id ?>">
-                                    <code><?= htmlspecialchars($t->transaction_code) ?></code>
-                                </a>
+                                <?php if ($s->source === 'order'): ?>
+                                    <a href="<?= BASE_URL ?>orders/detail/<?= $s->id ?>">
+                                        <code><?= htmlspecialchars($s->order_code) ?></code>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="<?= BASE_URL ?>transactions/detail/<?= $s->id ?>">
+                                        <code><?= htmlspecialchars($s->transaction_code) ?></code>
+                                    </a>
+                                <?php endif; ?>
                             </td>
-                            <td><?= date('d/m/Y H:i', strtotime($t->transaction_date)) ?></td>
-                            <td class="fw-semibold">Rp <?= number_format($t->total_amount, 0, ',', '.') ?></td>
-                            <td>Rp <?= number_format($t->payment_amount, 0, ',', '.') ?></td>
-                            <td>Rp <?= number_format($t->change_amount, 0, ',', '.') ?></td>
-                            <td><?= htmlspecialchars($t->cashier_name ?? '-') ?></td>
+                            <td><?= date('d/m/Y H:i', strtotime($s->created_at)) ?></td>
+                            <td>
+                                <?php if ($s->source === 'order'): ?>
+                                    <span class="badge bg-label-warning">Pesanan</span>
+                                <?php else: ?>
+                                    <span class="badge bg-label-primary">POS</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="fw-semibold">Rp <?= number_format($s->total_amount, 0, ',', '.') ?></td>
+                            <td>Rp <?= number_format($s->payment_amount, 0, ',', '.') ?></td>
+                            <td>Rp <?= number_format($s->change_amount, 0, ',', '.') ?></td>
+                            <td>
+                                <?php if ($s->source === 'order'): ?>
+                                    <span class="text-muted"><?= htmlspecialchars($s->customer_name ?? '-') ?></span>
+                                <?php else: ?>
+                                    <span class="text-muted"><?= htmlspecialchars($s->cashier_name ?? '-') ?></span>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="7" class="text-center py-4 text-muted">Tidak ada transaksi pada periode ini</td>
+                        <td colspan="8" class="text-center py-4 text-muted">Tidak ada transaksi pada periode ini</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
-            <?php if (!empty($transactions)): ?>
+            <?php if (!empty($sales)): ?>
                 <tfoot>
                     <tr class="fw-bold">
-                        <td colspan="3" class="text-end">Total</td>
+                        <td colspan="4" class="text-end">Total</td>
                         <td class="text-primary">Rp <?= number_format($totalSales, 0, ',', '.') ?></td>
                         <td colspan="3"></td>
                     </tr>

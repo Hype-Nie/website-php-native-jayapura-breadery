@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(150) DEFAULT '',
     password VARCHAR(255) NOT NULL,
-    role ENUM('admin','kasir') NOT NULL DEFAULT 'kasir',
+    role ENUM('admin','karyawan') NOT NULL DEFAULT 'karyawan',
     phone VARCHAR(20) DEFAULT '',
     address TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS products (
     category VARCHAR(100) DEFAULT '',
     price DECIMAL(12,0) NOT NULL DEFAULT 0,
     stock INT NOT NULL DEFAULT 0,
+    image VARCHAR(255) DEFAULT '',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_barcode (barcode),
@@ -106,33 +107,86 @@ CREATE TABLE IF NOT EXISTS purchase_items (
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Default admin user (password: password)
+-- Customers
+CREATE TABLE IF NOT EXISTS customers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    phone VARCHAR(20) DEFAULT '',
+    email VARCHAR(150) DEFAULT '',
+    address TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Customer Orders
+CREATE TABLE IF NOT EXISTS customer_orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_code VARCHAR(50) UNIQUE NOT NULL,
+    customer_id INT DEFAULT NULL,
+    customer_name VARCHAR(150) DEFAULT '',
+    customer_phone VARCHAR(20) DEFAULT '',
+    total_amount DECIMAL(12,0) NOT NULL DEFAULT 0,
+    payment_amount DECIMAL(12,0) NOT NULL DEFAULT 0,
+    change_amount DECIMAL(12,0) NOT NULL DEFAULT 0,
+    status ENUM('pending','paid','cancelled') NOT NULL DEFAULT 'pending',
+    notes TEXT,
+    user_id INT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_order_code (order_code),
+    INDEX idx_status (status),
+    INDEX idx_created_at (created_at),
+    FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS customer_order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    product_name VARCHAR(255) NOT NULL,
+    barcode VARCHAR(50) NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    price DECIMAL(12,0) NOT NULL DEFAULT 0,
+    subtotal DECIMAL(12,0) NOT NULL DEFAULT 0,
+    FOREIGN KEY (order_id) REFERENCES customer_orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Default users (password: password)
 INSERT IGNORE INTO users (name, username, email, password, role) VALUES
 ('Administrator', 'admin', 'admin@kasir.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
-('Kasir Demo', 'kasir', 'kasir@kasir.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'kasir');
+('Karyawan Demo', 'employee', 'employee@kasir.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'karyawan');
 
 -- Default categories
 INSERT IGNORE INTO categories (name, description) VALUES
-('Makanan', 'Produk makanan dan snack'),
-('Minuman', 'Produk minuman'),
-('Alat Tulis', 'Peralatan tulis kantor'),
-('Kebersihan', 'Produk kebersihan dan toiletries');
+('Aksesoris', 'Kalung, gelang, cincin, dan perhiasan'),
+('Tatoo', 'Tato temporer dan stiker body art'),
+('Piercing', 'Piercing badan dan accessories'),
+('Merchandise', 'Kaos, tote bag, dan merchandise lainnya');
 
 -- Default suppliers
 INSERT IGNORE INTO suppliers (name, phone, email, address) VALUES
-('PT Indofood Sukses Makmur', '021-57951234', 'sales@indofood.co.id', 'Jakarta Selatan'),
-('PT Sinar Sosro', '021-8711234', 'order@sosro.co.id', 'Bekasi, Jawa Barat'),
-('PT Danone Aqua', '021-29955678', 'supply@danone.co.id', 'Jakarta Selatan');
+('Tatto Art Supply', '021-1234567', 'order@tattoart.id', 'Jakarta Selatan'),
+('Piercing Express', '021-7654321', 'sales@piercingexpress.id', 'Bekasi, Jawa Barat'),
+('Merch Factory', '021-9988776', 'supply@merchfactory.id', 'Jakarta Selatan');
 
--- Sample products (category_id references categories table)
+-- Run this if products table already exists without image column:
+-- ALTER TABLE products ADD COLUMN image VARCHAR(255) DEFAULT '' AFTER stock;
+
+-- Sample products
 INSERT IGNORE INTO products (barcode, name, category_id, category, price, stock) VALUES
-('8992761121109', 'Indomie Goreng', 1, 'Makanan', 3500, 100),
-('8992753161005', 'Teh Botol Sosro 500ml', 2, 'Minuman', 5000, 50),
-('8996001355008', 'Aqua 600ml', 2, 'Minuman', 3000, 80),
-('8992753171004', 'Teh Pucuk Harum 350ml', 2, 'Minuman', 4000, 60),
-('8992761121116', 'Indomie Soto', 1, 'Makanan', 3500, 100),
-('8886008101053', 'Pocari Sweat 500ml', 2, 'Minuman', 7500, 40),
-('8992696421219', 'Chitato Sapi Panggang 68g', 1, 'Makanan', 10500, 35),
-('8998866200318', 'Good Day Cappuccino 250ml', 2, 'Minuman', 5500, 45),
-('8886012810019', 'Ultra Milk Coklat 250ml', 2, 'Minuman', 6000, 55),
-('8991102231176', 'Roti Sari Roti Tawar', 1, 'Makanan', 15000, 25);
+('ATK001', 'Kalung Rantai Silver', 1, 'Aksesoris', 85000, 30),
+('ATK002', 'Gelang Charm Gold', 1, 'Aksesoris', 65000, 45),
+('ATK003', 'Cincin Vintage Bronze', 1, 'Aksesoris', 45000, 60),
+('ATK004', 'Anting Feather', 1, 'Aksesoris', 35000, 50),
+('ATK005', 'Bangle Kawat Tembaga', 1, 'Aksesoris', 55000, 40),
+('TTO001', 'Tato Butterfly (L)', 2, 'Tatoo', 25000, 100),
+('TTO002', 'Tato Rose (M)', 2, 'Tatoo', 20000, 120),
+('TTO003', 'Tato Dragon (XL)', 2, 'Tatoo', 35000, 80),
+('TTO004', 'Tato Tribal Set', 2, 'Tatoo', 30000, 90),
+('TTO005', 'Tato Flower Mandala', 2, 'Tatoo', 28000, 110),
+('PRC001', 'Nose Ring Hoop', 3, 'Piercing', 30000, 75),
+('PRC002', 'Ear Cuff Spiral', 3, 'Piercing', 40000, 60),
+('PRC003', 'Lip Ring Ball', 3, 'Piercing', 20000, 85),
+('MRC001', 'Kaos Logo The Beadery (M)', 4, 'Merchandise', 120000, 25),
+('MRC002', 'Tote Bag Canvas', 4, 'Merchandise', 85000, 35),
+('MRC003', 'Sticker Pack Beadery', 4, 'Merchandise', 15000, 200);

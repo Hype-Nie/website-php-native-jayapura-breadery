@@ -31,7 +31,7 @@ class Users extends Controller
             $username = trim($_POST['username'] ?? '');
             $email    = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
-            $role     = $_POST['role'] ?? 'kasir';
+            $role     = $_POST['role'] ?? 'karyawan';
 
             $errors = [];
             if (empty($name))     $errors[] = 'Nama wajib diisi';
@@ -53,7 +53,7 @@ class Users extends Controller
                 'username' => $username,
                 'email'    => $email,
                 'password' => password_hash($password, PASSWORD_DEFAULT),
-                'role'     => in_array($role, ['admin', 'kasir']) ? $role : 'kasir'
+                'role'     => in_array($role, ['admin', 'karyawan']) ? $role : 'karyawan'
             ]);
 
             $this->setFlash('success', 'User berhasil ditambahkan');
@@ -74,7 +74,7 @@ class Users extends Controller
             $name     = trim($_POST['name'] ?? '');
             $username = trim($_POST['username'] ?? '');
             $email    = trim($_POST['email'] ?? '');
-            $role     = $_POST['role'] ?? 'kasir';
+            $role     = $_POST['role'] ?? 'karyawan';
             $password = $_POST['password'] ?? '';
 
             $errors = [];
@@ -99,7 +99,7 @@ class Users extends Controller
                 'name'     => $name,
                 'username' => $username,
                 'email'    => $email,
-                'role'     => in_array($role, ['admin', 'kasir']) ? $role : 'kasir'
+                'role'     => in_array($role, ['admin', 'karyawan']) ? $role : 'karyawan'
             ];
             if (!empty($password)) {
                 if (strlen($password) < 6) {

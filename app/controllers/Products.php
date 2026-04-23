@@ -35,11 +35,23 @@ class Products extends Controller
             $price       = (int)($_POST['price'] ?? 0);
             $stock       = (int)($_POST['stock'] ?? 0);
 
-            // Resolve category name
             $categoryName = '';
             if ($category_id > 0) {
                 $cat = $this->categoryModel->find($category_id);
                 $categoryName = $cat ? $cat->name : '';
+            }
+
+            $imageName = '';
+            if (!empty($_FILES['image']['name'])) {
+                $uploadDir = '../public/assets/img/products/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                $imageName = time() . '_' . basename($_FILES['image']['name']);
+                $uploadFile = $uploadDir . $imageName;
+                if (!move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+                    $errors[] = 'Gagal mengupload gambar';
+                }
             }
 
             $errors = [];
@@ -68,6 +80,7 @@ class Products extends Controller
                 'category'    => $categoryName,
                 'price'       => $price,
                 'stock'       => $stock,
+                'image'       => $imageName,
             ]);
 
             $this->setFlash('success', 'Produk berhasil ditambahkan');
@@ -98,6 +111,22 @@ class Products extends Controller
             if ($category_id > 0) {
                 $cat = $this->categoryModel->find($category_id);
                 $categoryName = $cat ? $cat->name : '';
+            }
+
+            $imageName = $product->image ?? '';
+            if (!empty($_FILES['image']['name'])) {
+                $uploadDir = '../public/assets/img/products/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                if ($imageName && file_exists($uploadDir . $imageName)) {
+                    unlink($uploadDir . $imageName);
+                }
+                $imageName = time() . '_' . basename($_FILES['image']['name']);
+                $uploadFile = $uploadDir . $imageName;
+                if (!move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+                    $errors[] = 'Gagal mengupload gambar';
+                }
             }
 
             $errors = [];
@@ -132,6 +161,7 @@ class Products extends Controller
                 'category'    => $categoryName,
                 'price'       => $price,
                 'stock'       => $stock,
+                'image'       => $imageName,
             ]);
 
             $this->setFlash('success', 'Produk berhasil diperbarui');
@@ -178,7 +208,8 @@ class Products extends Controller
                     'name'     => $product->name,
                     'price'    => (int)$product->price,
                     'stock'    => (int)$product->stock,
-                    'category' => $product->category
+                    'category' => $product->category,
+                    'image'    => $product->image
                 ]
             ]);
         } else {

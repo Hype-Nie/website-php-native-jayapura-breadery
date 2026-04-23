@@ -20,7 +20,7 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="<?= BASE_URL ?>assets/img/logo/logo.png" />
-    <link rel="preload" as="image" href="<?= BASE_URL ?>assets/img/logo/logo-96.png" />
+
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -36,6 +36,28 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/vendor/css/core.css" class="template-customizer-core-css" />
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/demo.css" />
+    
+    <style>
+        :root {
+            --primary-color: #1E90FF;
+            --secondary-color: #F39C12;
+        }
+        /* Override primary colors in admin dashboard */
+        .bg-primary { background-color: var(--primary-color) !important; }
+        .btn-primary { background-color: var(--primary-color) !important; border-color: var(--primary-color) !important; }
+        .btn-primary:hover { background-color: #1a82e6 !important; border-color: #1a82e6 !important; }
+        .btn-outline-primary { color: var(--primary-color) !important; border-color: var(--primary-color) !important; }
+        .btn-outline-primary:hover { background-color: var(--primary-color) !important; color: #fff !important; }
+        .text-primary { color: var(--primary-color) !important; }
+        .bg-label-primary { background-color: rgba(30, 144, 255, 0.1) !important; color: var(--primary-color) !important; }
+        
+        /* Layout/Menu active state override */
+        .menu-inner .active > .menu-link { color: var(--primary-color) !important; background-color: rgba(30, 144, 255, 0.08) !important; }
+        .menu-inner .active > .menu-link:before { background-color: var(--primary-color) !important; }
+        
+        /* Dropdown/Other UI */
+        .dropdown-item:active, .dropdown-item.active { background-color: var(--primary-color) !important; }
+    </style>
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />

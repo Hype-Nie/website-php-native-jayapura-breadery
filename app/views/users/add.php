@@ -55,7 +55,7 @@
                     <label class="col-sm-2 col-form-label" for="role">Role</label>
                     <div class="col-sm-10">
                         <select class="form-select" id="role" name="role">
-                            <option value="kasir" <?= ($old['role'] ?? '') === 'kasir' ? 'selected' : '' ?>>Kasir</option>
+                            <option value="karyawan" <?= ($old['role'] ?? '') === 'karyawan' ? 'selected' : '' ?>>Karyawan</option>
                             <option value="admin" <?= ($old['role'] ?? '') === 'admin' ? 'selected' : '' ?>>Admin</option>
                         </select>
                     </div>

@@ -5,8 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - <?= APP_NAME ?></title>
-    <link rel="icon" type="image/x-icon" href="<?= BASE_URL ?>assets/img/favicon/favicon.ico" />
-    <link rel="preload" as="image" href="<?= BASE_URL ?>assets/img/logo/logo-96.png" />
+    <link rel="icon" type="image/png" href="<?= BASE_URL ?>assets/img/logo/logo.png" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -14,6 +14,19 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/vendor/css/core.css" class="template-customizer-core-css" />
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/demo.css" />
+    <style>
+      .authentication-inner .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      }
+      .app-brand-logo svg {
+        transition: transform 0.2s ease;
+      }
+      .app-brand-logo svg:hover {
+        transform: scale(1.05);
+      }
+    </style>
     <script src="<?= BASE_URL ?>assets/vendor/js/helpers.js"></script>
     <script src="<?= BASE_URL ?>assets/js/config.js"></script>
 </head>
@@ -27,10 +40,10 @@
                         <div class="app-brand justify-content-center">
                             <a href="<?= BASE_URL ?>" class="app-brand-link gap-2">
                                 <span class="app-brand-logo demo">
-                                    <img src="<?= BASE_URL ?>assets/img/logo/logo-96.png" alt="Logo <?= APP_NAME ?>" width="42" height="42" loading="eager" fetchpriority="high" decoding="async" />
+                                    <img src="<?= BASE_URL ?>assets/img/logo/logo.png" alt="<?= APP_NAME ?>" width="48" height="48" style="border-radius:50%;object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,0.1);" loading="eager" fetchpriority="high" decoding="async" />
                                 </span>
-                                <span class="app-brand-text demo text-body fw-bolder"><?= APP_NAME ?></span>
-                                <div class="small text-secondary" style="font-size:0.95em;line-height:1.1;">By : Cicipung</div>
+                                <span class="app-brand-text demo text-body fw-bolder" style="font-size:1.25rem;letter-spacing:-0.3px;"><?= APP_NAME ?></span>
+                                <div class="small text-muted" style="font-size:0.8rem;opacity:0.6;margin-top:-2px;">by Cicipung</div>
                             </a>
                         </div>
 
