@@ -229,6 +229,27 @@ $pageScripts = '
     50% { top: calc(100% - 2px); }
     100% { top: 0; }
 }
+#cartTable .qty-control {
+    min-width: 160px;
+}
+#cartTable .qty-control .btn {
+    width: 40px;
+}
+#cartTable .qty-input {
+    min-width: 58px;
+    font-weight: 600;
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+}
+#cartTable .qty-input::-webkit-outer-spin-button,
+#cartTable .qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+#cartTable .qty-input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
 <script src="' . BASE_URL . 'assets/js/transaction.js"></script>

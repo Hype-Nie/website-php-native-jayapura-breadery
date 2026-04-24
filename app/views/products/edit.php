@@ -19,7 +19,7 @@
                 </div>
             <?php endif; ?>
 
-            <form method="POST" action="<?= BASE_URL ?>products/edit/<?= $product->id ?>">
+            <form method="POST" action="<?= BASE_URL ?>products/edit/<?= $product->id ?>" enctype="multipart/form-data">
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label" for="barcode">Barcode</label>
                     <div class="col-sm-10">
@@ -79,6 +79,22 @@
                     <div class="col-sm-10">
                         <input type="number" class="form-control" id="stock" name="stock"
                             value="<?= (int)$product->stock ?>" min="0" required />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" for="image">Gambar</label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" />
+                        <?php if (!empty($product->image)): ?>
+                            <div class="mt-2">
+                                <img src="<?= BASE_URL ?>assets/img/products/<?= htmlspecialchars($product->image) ?>"
+                                    alt="<?= htmlspecialchars($product->name) ?>"
+                                    style="width: 72px; height: 72px; object-fit: cover; border-radius: 8px;" />
+                                <small class="text-muted d-block mt-1">Kosongkan jika tidak ingin mengganti gambar.</small>
+                            </div>
+                        <?php else: ?>
+                            <small class="text-muted d-block mt-1">Belum ada gambar. Anda bisa upload gambar produk di sini.</small>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="row justify-content-end">

@@ -34,6 +34,7 @@ class Products extends Controller
             $category_id = (int)($_POST['category_id'] ?? 0);
             $price       = (int)($_POST['price'] ?? 0);
             $stock       = (int)($_POST['stock'] ?? 0);
+            $errors = [];
 
             $categoryName = '';
             if ($category_id > 0) {
@@ -54,7 +55,6 @@ class Products extends Controller
                 }
             }
 
-            $errors = [];
             if (empty($barcode)) $errors[] = 'Barcode wajib diisi';
             if (empty($name))    $errors[] = 'Nama produk wajib diisi';
             if ($price <= 0)     $errors[] = 'Harga harus lebih dari 0';
@@ -106,6 +106,7 @@ class Products extends Controller
             $category_id = (int)($_POST['category_id'] ?? 0);
             $price       = (int)($_POST['price'] ?? 0);
             $stock       = (int)($_POST['stock'] ?? 0);
+            $errors = [];
 
             $categoryName = '';
             if ($category_id > 0) {
@@ -129,7 +130,6 @@ class Products extends Controller
                 }
             }
 
-            $errors = [];
             if (empty($barcode)) $errors[] = 'Barcode wajib diisi';
             if (empty($name))    $errors[] = 'Nama produk wajib diisi';
             if ($price <= 0)     $errors[] = 'Harga harus lebih dari 0';

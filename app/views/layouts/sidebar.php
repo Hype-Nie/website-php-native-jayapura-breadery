@@ -32,14 +32,14 @@
             <span class="menu-header-text">Pesanan & Penjualan</span>
         </li>
 
-        <li class="menu-item <?= $t === 'Penjualan Baru' ? 'active' : '' ?>">
+        <li class="menu-item <?= in_array($t, ['Penjualan Baru', 'Transaksi Baru']) ? 'active' : '' ?>">
             <a href="<?= BASE_URL ?>transactions/create" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-cart-alt"></i>
                 <div>Penjualan Baru</div>
             </a>
         </li>
 
-        <li class="menu-item <?= in_array($t, ['Riwayat Penjualan', 'Detail Penjualan']) ? 'active' : '' ?>">
+        <li class="menu-item <?= in_array($t, ['Riwayat Penjualan', 'Detail Penjualan', 'Riwayat Transaksi', 'Detail Transaksi']) ? 'active' : '' ?>">
             <a href="<?= BASE_URL ?>transactions" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-spreadsheet"></i>
                 <div>Riwayat Penjualan</div>
