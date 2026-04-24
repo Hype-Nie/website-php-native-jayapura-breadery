@@ -15,7 +15,7 @@ class Transactions extends Controller
     public function index()
     {
         $this->view('transactions/index', [
-            'title'        => 'Riwayat Transaksi',
+            'title'        => 'Riwayat Penjualan',
             'transactions' => $this->transactionModel->getRecent(50)
         ]);
     }
@@ -24,7 +24,7 @@ class Transactions extends Controller
     public function create()
     {
         $this->view('transactions/create', [
-            'title' => 'Transaksi Baru'
+            'title' => 'Penjualan Baru'
         ]);
     }
 
@@ -111,7 +111,7 @@ class Transactions extends Controller
         if (!$transaction) $this->redirect('transactions');
 
         $this->view('transactions/detail', [
-            'title'       => 'Detail Transaksi',
+            'title'       => 'Detail Penjualan',
             'transaction' => $transaction
         ]);
     }

@@ -6,6 +6,33 @@ class Reports extends Controller
     private $purchaseModel;
     private $orderModel;
 
+    private function buildSalesData($from, $to)
+    {
+        $transactions = $this->transactionModel->getByDateRange($from, $to);
+        $orders = $this->orderModel->getByDateRange($from . ' 00:00:00', $to . ' 23:59:59');
+        $orders = array_filter($orders, fn($o) => $o->status === 'paid');
+
+        $allSales = [];
+        foreach ($transactions as $t) {
+            $t->source = 'pos';
+            $t->sale_at = $t->transaction_date ?? $t->created_at ?? null;
+            $allSales[] = $t;
+        }
+        foreach ($orders as $o) {
+            $o->source = 'order';
+            $o->sale_at = $o->created_at ?? $o->transaction_date ?? null;
+            $allSales[] = $o;
+        }
+
+        usort($allSales, function ($a, $b) {
+            $timeA = !empty($a->sale_at) ? strtotime($a->sale_at) : 0;
+            $timeB = !empty($b->sale_at) ? strtotime($b->sale_at) : 0;
+            return $timeB <=> $timeA;
+        });
+
+        return $allSales;
+    }
+
     public function __construct()
     {
         $this->requireLogin();
@@ -25,21 +52,7 @@ class Reports extends Controller
         $from = $_GET['from'] ?? date('Y-m-01');
         $to   = $_GET['to']   ?? date('Y-m-d');
 
-        $transactions = $this->transactionModel->getByDateRange($from, $to);
-        $orders = $this->orderModel->getByDateRange($from . ' 00:00:00', $to . ' 23:59:59');
-        $orders = array_filter($orders, fn($o) => $o->status === 'paid');
-
-        $allSales = [];
-        foreach ($transactions as $t) {
-            $t->source = 'pos';
-            $allSales[] = $t;
-        }
-        foreach ($orders as $o) {
-            $o->source = 'order';
-            $allSales[] = $o;
-        }
-
-        usort($allSales, fn($a, $b) => strtotime($a->created_at) <= strtotime($b->created_at) ? 1 : -1);
+        $allSales = $this->buildSalesData($from, $to);
 
         $totalSales = 0;
         foreach ($allSales as $s) $totalSales += (int)$s->total_amount;
@@ -79,20 +92,7 @@ class Reports extends Controller
         $from = $_GET['from'] ?? date('Y-m-01');
         $to   = $_GET['to']   ?? date('Y-m-d');
 
-        $transactions = $this->transactionModel->getByDateRange($from, $to);
-        $orders = $this->orderModel->getByDateRange($from . ' 00:00:00', $to . ' 23:59:59');
-        $orders = array_filter($orders, fn($o) => $o->status === 'paid');
-
-        $allSales = [];
-        foreach ($transactions as $t) {
-            $t->source = 'pos';
-            $allSales[] = $t;
-        }
-        foreach ($orders as $o) {
-            $o->source = 'order';
-            $allSales[] = $o;
-        }
-        usort($allSales, fn($a, $b) => strtotime($a->created_at) <= strtotime($b->created_at) ? 1 : -1);
+        $allSales = $this->buildSalesData($from, $to);
 
         $filename = "laporan_penjualan_{$from}_sd_{$to}.csv";
         header('Content-Type: text/csv; charset=utf-8');
@@ -104,10 +104,11 @@ class Reports extends Controller
 
         $no = 1;
         foreach ($allSales as $s) {
+            $saleAt = $s->sale_at ?? $s->transaction_date ?? $s->created_at ?? null;
             fputcsv($out, [
                 $no++,
                 $s->source === 'order' ? $s->order_code : $s->transaction_code,
-                date('d/m/Y H:i', strtotime($s->created_at)),
+                $saleAt ? date('d/m/Y H:i', strtotime($saleAt)) : '-',
                 $s->source === 'order' ? 'Pesanan' : 'POS',
                 (int)$s->total_amount,
                 (int)$s->payment_amount,
@@ -154,20 +155,7 @@ class Reports extends Controller
         $from = $_GET['from'] ?? date('Y-m-01');
         $to   = $_GET['to']   ?? date('Y-m-d');
 
-        $transactions = $this->transactionModel->getByDateRange($from, $to);
-        $orders = $this->orderModel->getByDateRange($from . ' 00:00:00', $to . ' 23:59:59');
-        $orders = array_filter($orders, fn($o) => $o->status === 'paid');
-
-        $allSales = [];
-        foreach ($transactions as $t) {
-            $t->source = 'pos';
-            $allSales[] = $t;
-        }
-        foreach ($orders as $o) {
-            $o->source = 'order';
-            $allSales[] = $o;
-        }
-        usort($allSales, fn($a, $b) => strtotime($a->created_at) <= strtotime($b->created_at) ? 1 : -1);
+        $allSales = $this->buildSalesData($from, $to);
 
         $totalSales = 0;
         foreach ($allSales as $s) $totalSales += (int)$s->total_amount;
@@ -175,6 +163,7 @@ class Reports extends Controller
         $this->view('reports/print_sales', [
             'title'        => 'Cetak Laporan Penjualan',
             'sales'        => $allSales,
+            'transactions' => $allSales,
             'totalSales'   => $totalSales,
             'from'         => $from,
             'to'           => $to
