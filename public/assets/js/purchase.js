@@ -203,7 +203,7 @@
           item.id +
           '" />' +
           "</div></td>" +
-          '<td><div class="input-group input-group-sm" style="width:120px">' +
+          '<td><div class="input-group input-group-sm qty-control" style="width:160px">' +
           '<button class="btn btn-outline-secondary" type="button" data-act="dec" data-id="' +
           item.id +
           '"><i class="bx bx-minus"></i></button>' +

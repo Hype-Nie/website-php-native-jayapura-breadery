@@ -108,7 +108,10 @@
                                     </a>
                                 <?php endif; ?>
                             </td>
-                            <td><?= date('d/m/Y H:i', strtotime($s->created_at)) ?></td>
+                            <td>
+                                <?php $saleAt = $s->sale_at ?? $s->transaction_date ?? $s->created_at ?? null; ?>
+                                <?= $saleAt ? date('d/m/Y H:i', strtotime($saleAt)) : '-' ?>
+                            </td>
                             <td>
                                 <?php if ($s->source === 'order'): ?>
                                     <span class="badge bg-label-warning">Pesanan</span>

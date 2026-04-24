@@ -39,7 +39,7 @@
                     <th>Pelanggan</th>
                     <th>Total</th>
                     <th>Status</th>
-                    <th>Aksi</th>
+                    <th style="width:1%">Aksi</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -63,12 +63,12 @@
                                     <span class="badge bg-label-danger">Batal</span>
                                 <?php endif; ?>
                             </td>
-                            <td>
+                            <td class="text-nowrap">
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu dropdown-menu-end">
                                         <a class="dropdown-item" href="<?= BASE_URL ?>orders/detail/<?= $order->id ?>">
                                             <i class="bx bx-show me-1"></i> Detail
                                         </a>

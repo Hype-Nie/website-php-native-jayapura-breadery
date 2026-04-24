@@ -118,20 +118,21 @@
                 <th class="text-right">Total</th>
                 <th class="text-right">Bayar</th>
                 <th class="text-right">Kembalian</th>
-                <th>Kasir</th>
+                <th>Kasir/Pelanggan</th>
             </tr>
         </thead>
         <tbody>
-            <?php if (!empty($transactions)): ?>
-                <?php foreach ($transactions as $i => $t): ?>
+            <?php if (!empty($sales)): ?>
+                <?php foreach ($sales as $i => $t): ?>
                     <tr>
                         <td class="text-center"><?= $i + 1 ?></td>
-                        <td><?= htmlspecialchars($t->transaction_code) ?></td>
-                        <td><?= date('d/m/Y H:i', strtotime($t->transaction_date)) ?></td>
+                        <td><?= htmlspecialchars($t->source === 'order' ? $t->order_code : $t->transaction_code) ?></td>
+                        <?php $saleAt = $t->sale_at ?? $t->transaction_date ?? $t->created_at ?? null; ?>
+                        <td><?= $saleAt ? date('d/m/Y H:i', strtotime($saleAt)) : '-' ?></td>
                         <td class="text-right">Rp <?= number_format($t->total_amount, 0, ',', '.') ?></td>
                         <td class="text-right">Rp <?= number_format($t->payment_amount, 0, ',', '.') ?></td>
                         <td class="text-right">Rp <?= number_format($t->change_amount, 0, ',', '.') ?></td>
-                        <td><?= htmlspecialchars($t->cashier_name ?? '-') ?></td>
+                        <td><?= htmlspecialchars($t->source === 'order' ? ($t->customer_name ?? '-') : ($t->cashier_name ?? '-')) ?></td>
                     </tr>
                 <?php endforeach; ?>
                 <tr class="total-row">
@@ -148,7 +149,7 @@
     </table>
 
     <div class="summary">
-        <p>Total Transaksi: <strong><?= count($transactions) ?></strong></p>
+        <p>Total Transaksi: <strong><?= count($sales ?? []) ?></strong></p>
         <p>Total Penjualan: <strong>Rp <?= number_format($totalSales, 0, ',', '.') ?></strong></p>
     </div>
 

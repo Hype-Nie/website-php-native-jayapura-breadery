@@ -27,7 +27,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Gambar</th>
+                    <th style="width:72px" class="text-center">Gambar</th>
                     <th>Barcode</th>
                     <th>Nama Produk</th>
                     <th>Kategori</th>
@@ -41,17 +41,17 @@
                     <?php foreach ($products as $i => $product): ?>
                         <tr>
                             <td><?= $i + 1 ?></td>
-                            <td><code><?= htmlspecialchars($product->barcode) ?></code></td>
-                            <td>
+                            <td class="text-center">
                                 <?php
                                 $imgPath = !empty($product->image) ? BASE_URL . 'assets/img/products/' . $product->image : null;
                                 if ($imgPath): ?>
                                     <img src="<?= $imgPath ?>" alt="<?= htmlspecialchars($product->name) ?>"
                                         class="rounded" style="height:40px;width:40px;object-fit:cover;" />
                                 <?php else: ?>
-                                    <i class="bx bx-qrcode text-muted"></i>
+                                    <i class="bx bx-image-alt text-muted" style="font-size:1.4rem"></i>
                                 <?php endif; ?>
                             </td>
+                            <td><code><?= htmlspecialchars($product->barcode) ?></code></td>
                             <td><strong><?= htmlspecialchars($product->name) ?></strong></td>
                             <td>
                                 <?php if ($product->category): ?>
