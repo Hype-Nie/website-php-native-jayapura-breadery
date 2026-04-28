@@ -3,20 +3,42 @@
 class Profile extends Controller
 {
     private $userModel;
+    private $payrollModel;
 
     public function __construct()
     {
         $this->requireLogin();
         $this->userModel = $this->model('User');
+        $this->payrollModel = $this->model('Payroll');
     }
 
     public function index()
     {
         $user = $this->userModel->find($this->auth()['id']);
+        $employeeId = $user->id;
+
+        $currentMonth = (int)date('n');
+        $currentYear = (int)date('Y');
+
+        // Only fetch payroll data for employees, not admin
+        if ($user->role === 'karyawan') {
+            $latestPaid = $this->payrollModel->getLatestPaid($employeeId);
+            $currentMonthPayroll = $this->payrollModel->getCurrentMonthStatus($employeeId, $currentMonth, $currentYear);
+            $payrollHistory = $this->payrollModel->getByEmployeeAll($employeeId, 6);
+        } else {
+            $latestPaid = null;
+            $currentMonthPayroll = null;
+            $payrollHistory = [];
+        }
 
         $this->view('profile/index', [
-            'title' => 'Profil Saya',
-            'user'  => $user
+            'title'               => 'Profil Saya',
+            'user'                => $user,
+            'latestPaid'          => $latestPaid,
+            'currentMonthPayroll' => $currentMonthPayroll,
+            'payrollHistory'      => $payrollHistory,
+            'currentMonth'        => $currentMonth,
+            'currentYear'         => $currentYear
         ]);
     }
 
