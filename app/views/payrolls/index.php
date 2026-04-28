@@ -4,22 +4,33 @@
     <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
         <h5 class="mb-0">Daftar Gaji</h5>
         <div class="d-flex align-items-center gap-2">
-            <form class="d-flex align-items-center gap-2" method="GET" action="<?= BASE_URL ?>payrolls">
-                <select name="month" class="form-select form-select-sm" style="width: 120px;">
+            <form class="d-flex align-items-center gap-2" method="GET" action="<?= BASE_URL ?>payrolls" id="filterForm">
+                <input type="hidden" name="show_all" id="showAllInput" value="<?= $showAll ? '1' : '0' ?>">
+                <select name="month" class="form-select form-select-sm" style="width: 120px;" <?= $showAll ? 'disabled' : '' ?>>
                     <?php for ($m = 1; $m <= 12; $m++): ?>
                         <option value="<?= $m ?>" <?= $month == $m ? 'selected' : '' ?>>
                             <?= date('F', mktime(0, 0, 0, $m, 1)) ?>
                         </option>
                     <?php endfor; ?>
                 </select>
-                <select name="year" class="form-select form-select-sm" style="width: 90px;">
+                <select name="year" class="form-select form-select-sm" style="width: 90px;" <?= $showAll ? 'disabled' : '' ?>>
                     <?php for ($y = date('Y'); $y >= date('Y') - 5; $y--): ?>
                         <option value="<?= $y ?>" <?= $year == $y ? 'selected' : '' ?>>
                             <?= $y ?>
                         </option>
                     <?php endfor; ?>
                 </select>
-                <button type="submit" class="btn btn-sm btn-outline-primary" title="Filter"><i class="bx bx-filter-alt"></i></button>
+                <button type="submit" class="btn btn-sm btn-outline-primary" title="Filter" <?= $showAll ? 'disabled' : '' ?>><i class="bx bx-filter-alt"></i></button>
+                
+                <?php if ($showAll): ?>
+                    <a href="<?= BASE_URL ?>payrolls" class="btn btn-sm btn-outline-secondary">
+                        <i class="bx bx-calendar"></i> Periode
+                    </a>
+                <?php else: ?>
+                    <button type="button" class="btn btn-sm btn-outline-info" onclick="showAllPeriods()">
+                        <i class="bx bx-list-ul"></i> Semua
+                    </button>
+                <?php endif; ?>
             </form>
             <a href="<?= BASE_URL ?>payrolls/create" class="btn btn-sm btn-primary">
                 <i class="bx bx-plus"></i> Tambah
@@ -27,12 +38,24 @@
         </div>
     </div>
 
+    <script>
+    function showAllPeriods() {
+        document.getElementById('showAllInput').value = '1';
+        document.getElementById('filterForm').submit();
+    }
+    </script>
+
     <div class="card-body pb-0">
         <?php 
             $paidCount = count(array_filter($payrolls, fn($p) => $p->status === 'paid'));
             $draftCount = count(array_filter($payrolls, fn($p) => $p->status === 'draft'));
         ?>
         <div class="d-flex gap-3 flex-wrap mb-3">
+            <?php if ($showAll): ?>
+                <span class="badge bg-label-dark"><i class="bx bx-list-ul me-1"></i> Menampilkan: Semua Periode</span>
+            <?php else: ?>
+                <span class="badge bg-label-secondary"><i class="bx bx-calendar me-1"></i> Periode: <?= date('F Y', mktime(0, 0, 0, $month, 1, $year)) ?></span>
+            <?php endif; ?>
             <span class="badge bg-label-info"><i class="bx bx-wallet me-1"></i> Total Dibayar: Rp <?= number_format($totalPaid, 0, ',', '.') ?></span>
             <span class="badge bg-label-primary"><i class="bx bx-file me-1"></i> Total Slip: <?= count($payrolls) ?></span>
             <span class="badge bg-label-success"><i class="bx bx-check me-1"></i> Dibayar: <?= $paidCount ?></span>
@@ -138,11 +161,11 @@
     </div>
 </div>
 
-<?php if (!empty($unpaidEmployees)): ?>
+<?php if (!$showAll && !empty($unpaidEmployees)): ?>
 <div class="card mb-4 border-warning" style="border: 1px solid #ffab00;">
     <div class="card-header d-flex align-items-center justify-content-between pb-0">
         <div class="card-title mb-0">
-            <h5 class="m-0 me-2 text-warning"><i class="bx bx-user-x me-2"></i>Karyawan Belum Digaji</h5>
+            <h5 class="m-0 me-2 text-warning"><i class="bx bx-user-x me-2"></i>Karyawan Belum Digaji - <?= date('F Y', mktime(0, 0, 0, $month, 1, $year)) ?></h5>
         </div>
         <span class="badge bg-label-warning"><?= count($unpaidEmployees) ?> Karyawan</span>
     </div>

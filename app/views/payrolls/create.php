@@ -50,7 +50,10 @@
                             <select name="employee_id" class="form-select form-select-lg" required>
                                 <option value="">-- Pilih Karyawan --</option>
                                 <?php foreach ($employees as $emp): ?>
-                                    <option value="<?= $emp->id ?>" <?= ($old['employee_id'] ?? '') == $emp->id ? 'selected' : '' ?>>
+                                    <?php 
+                                        $selectedEmployee = ($old['employee_id'] ?? $defaultEmployeeId ?? '') == $emp->id;
+                                    ?>
+                                    <option value="<?= $emp->id ?>" <?= $selectedEmployee ? 'selected' : '' ?>>
                                         <?= htmlspecialchars($emp->name) ?> (<?= htmlspecialchars($emp->username) ?>)
                                     </option>
                                 <?php endforeach; ?>
@@ -62,7 +65,10 @@
                             </label>
                             <select name="period_month" class="form-select form-select-lg" required>
                                 <?php for ($m = 1; $m <= 12; $m++): ?>
-                                    <option value="<?= $m ?>" <?= ($old['period_month'] ?? date('n')) == $m ? 'selected' : '' ?>>
+                                    <?php 
+                                        $selectedMonth = ($old['period_month'] ?? $defaultMonth ?? date('n')) == $m;
+                                    ?>
+                                    <option value="<?= $m ?>" <?= $selectedMonth ? 'selected' : '' ?>>
                                         <?= date('F', mktime(0, 0, 0, $m, 1)) ?>
                                     </option>
                                 <?php endfor; ?>
@@ -74,7 +80,10 @@
                             </label>
                             <select name="period_year" class="form-select form-select-lg" required>
                                 <?php for ($y = date('Y'); $y >= date('Y') - 5; $y--): ?>
-                                    <option value="<?= $y ?>" <?= ($old['period_year'] ?? date('Y')) == $y ? 'selected' : '' ?>>
+                                    <?php 
+                                        $selectedYear = ($old['period_year'] ?? $defaultYear ?? date('Y')) == $y;
+                                    ?>
+                                    <option value="<?= $y ?>" <?= $selectedYear ? 'selected' : '' ?>>
                                         <?= $y ?>
                                     </option>
                                 <?php endfor; ?>

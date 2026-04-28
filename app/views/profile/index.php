@@ -229,6 +229,7 @@
                                 <th class="py-3 px-4">Periode</th>
                                 <th class="py-3 text-end">Total Gaji</th>
                                 <th class="py-3 text-center">Status</th>
+                                <th class="py-3 px-4 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -250,11 +251,16 @@
                                                 </span>
                                             <?php endif; ?>
                                         </td>
+                                        <td class="px-4 text-center">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#payrollDetailModal" onclick='fillPayrollModal(<?= json_encode($ph) ?>)'>
+                                                <i class="bx bx-show me-1"></i>Lihat
+                                            </button>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="3" class="text-center py-5">
+                                    <td colspan="4" class="text-center py-5">
                                         <div class="py-4">
                                             <div class="avatar avatar-lg mx-auto mb-3" style="background: #f3f4f6;">
                                                 <i class="bx bx-inbox text-muted" style="font-size: 2rem;"></i>
@@ -272,6 +278,137 @@
     </div>
 </div>
 <?php endif; ?>
+
+<!-- Modal Detail Slip Gaji -->
+<div class="modal fade" id="payrollDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header" style="background-color: #1e90ff;">
+                <h5 class="modal-title" style="color: #ffffff;">
+                    <i class="bx bx-receipt me-2"></i>Detail Slip Gaji
+                </h5>
+                <button type="button" class="btn-close" style="filter: invert(1) grayscale(100%) brightness(200%);" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4" style="background-color: #ffffff;">
+                <div class="text-center mb-4">
+                    <h6 style="color: #6c757d;">Periode</h6>
+                    <h4 class="fw-bold" style="color: #1e90ff;" id="modalPeriod">-</h4>
+                    <span id="modalStatus" class="badge mt-2">-</span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td style="color: #212529;">Gaji Pokok</td>
+                            <td class="text-end fw-semibold" style="color: #212529;" id="modalBaseSalary">-</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #212529;">Tunjangan</td>
+                            <td class="text-end fw-semibold" style="color: #198754;" id="modalAllowance">-</td>
+                        </tr>
+                        <tr id="modalBonusRow">
+                            <td style="color: #212529;">Bonus</td>
+                            <td class="text-end fw-semibold" style="color: #198754;" id="modalBonus">-</td>
+                        </tr>
+                        <tr id="modalDeductionRow">
+                            <td style="color: #212529;">Potongan</td>
+                            <td class="text-end fw-semibold" style="color: #dc3545;" id="modalDeduction">-</td>
+                        </tr>
+                        <tr class="border-top">
+                            <td class="fw-bold fs-5" style="color: #212529;">Total Gaji</td>
+                            <td class="text-end fw-bold fs-5" style="color: #1e90ff;" id="modalTotal">-</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="modalPaymentInfo" class="alert mt-3" style="display: none; background-color: #d1e7dd; border: none;">
+                    <div class="d-flex align-items-center">
+                        <i class="bx bx-calendar-check fs-4 me-2" style="color: #0f5132;"></i>
+                        <div>
+                            <small style="color: #0f5132;">Dibayar pada</small>
+                            <strong style="color: #0f5132;" id="modalPaymentDate">-</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="modalNotesSection" class="mt-3 p-3 rounded" style="display: none; background-color: #f8f9fa;">
+                    <h6 style="color: #212529; margin-bottom: 8px;">Catatan</h6>
+                    <p class="mb-0" style="color: #212529;" id="modalNotes">-</p>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #f8f9fa; border-top: 1px solid #dee2e6;">
+                <button type="button" class="btn" style="background-color: #6c757d; color: #ffffff;" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function fillPayrollModal(data) {
+    // Format currency
+    const formatCurrency = (num) => 'Rp ' + new Intl.NumberFormat('id-ID').format(num);
+    
+    // Format date
+    const formatDate = (dateStr) => {
+        if (!dateStr) return '-';
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    };
+
+    // Fill data
+    document.getElementById('modalPeriod').textContent = 
+        new Date(data.period_year, data.period_month - 1).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+    
+    const statusBadge = document.getElementById('modalStatus');
+    if (data.status === 'paid') {
+        statusBadge.className = 'badge bg-success mt-2';
+        statusBadge.innerHTML = '<i class="bx bx-check me-1"></i>Dibayar';
+    } else {
+        statusBadge.className = 'badge bg-warning text-dark mt-2';
+        statusBadge.innerHTML = '<i class="bx bx-time me-1"></i>Draft';
+    }
+
+    document.getElementById('modalBaseSalary').textContent = formatCurrency(data.base_salary);
+    document.getElementById('modalAllowance').textContent = '+' + formatCurrency(data.allowance);
+    document.getElementById('modalTotal').textContent = formatCurrency(data.total_salary);
+
+    // Handle bonus
+    const bonusRow = document.getElementById('modalBonusRow');
+    if (data.bonus > 0) {
+        bonusRow.style.display = 'table-row';
+        document.getElementById('modalBonus').textContent = '+' + formatCurrency(data.bonus);
+    } else {
+        bonusRow.style.display = 'none';
+    }
+
+    // Handle deduction
+    const deductionRow = document.getElementById('modalDeductionRow');
+    if (data.deduction > 0) {
+        deductionRow.style.display = 'table-row';
+        document.getElementById('modalDeduction').textContent = '-' + formatCurrency(data.deduction);
+    } else {
+        deductionRow.style.display = 'none';
+    }
+
+    // Handle payment info
+    const paymentInfo = document.getElementById('modalPaymentInfo');
+    if (data.status === 'paid' && data.payment_date) {
+        paymentInfo.style.display = 'block';
+        document.getElementById('modalPaymentDate').textContent = formatDate(data.payment_date);
+    } else {
+        paymentInfo.style.display = 'none';
+    }
+
+    // Handle notes
+    const notesSection = document.getElementById('modalNotesSection');
+    if (data.notes && data.notes.trim()) {
+        notesSection.style.display = 'block';
+        document.getElementById('modalNotes').textContent = data.notes;
+    } else {
+        notesSection.style.display = 'none';
+    }
+}
+</script>
 
 <?php
 $content = ob_get_clean();

@@ -125,4 +125,29 @@ class Payroll extends Model
         $stmt->execute($params);
         return $stmt->fetch()->c > 0;
     }
+
+    public function getAllPayrolls($limit = 100)
+    {
+        $stmt = $this->db->prepare("
+            SELECT p.*, u.name as employee_name, u.username
+            FROM {$this->table} p
+            JOIN users u ON p.employee_id = u.id
+            ORDER BY p.period_year DESC, p.period_month DESC, u.name ASC
+            LIMIT :limit
+        ");
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function getTotalPaidAll()
+    {
+        $stmt = $this->db->prepare("
+            SELECT COALESCE(SUM(total_salary), 0) as total
+            FROM {$this->table}
+            WHERE status = 'paid'
+        ");
+        $stmt->execute();
+        return $stmt->fetch()->total;
+    }
 }

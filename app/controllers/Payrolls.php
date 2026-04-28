@@ -15,17 +15,28 @@ class Payrolls extends Controller
 
     public function index()
     {
+        $showAll = isset($_GET['show_all']) && $_GET['show_all'] == '1';
         $month = (int)($_GET['month'] ?? date('n'));
         $year = (int)($_GET['year'] ?? date('Y'));
-        $payrolls = $this->payrollModel->getByPeriod($month, $year);
-        $totalPaid = $this->payrollModel->totalByPeriod($month, $year);
-        $unpaidEmployees = $this->payrollModel->getUnpaidEmployees($month, $year);
+
+        if ($showAll) {
+            // Tampilkan semua periode
+            $payrolls = $this->payrollModel->getAllPayrolls(100);
+            $totalPaid = $this->payrollModel->getTotalPaidAll();
+            $unpaidEmployees = []; // Tidak relevan untuk semua periode
+        } else {
+            // Tampilkan per periode
+            $payrolls = $this->payrollModel->getByPeriod($month, $year);
+            $totalPaid = $this->payrollModel->totalByPeriod($month, $year);
+            $unpaidEmployees = $this->payrollModel->getUnpaidEmployees($month, $year);
+        }
 
         $this->view('payrolls/index', [
             'title'             => 'Daftar Gaji',
             'payrolls'          => $payrolls,
             'month'             => $month,
             'year'              => $year,
+            'showAll'           => $showAll,
             'totalPaid'         => $totalPaid,
             'unpaidEmployees'   => $unpaidEmployees
         ]);
@@ -81,9 +92,17 @@ class Payrolls extends Controller
             $this->redirect('payrolls');
         }
 
+        // Ambil parameter dari URL untuk auto-fill
+        $defaultEmployeeId = (int)($_GET['employee_id'] ?? 0);
+        $defaultMonth = (int)($_GET['period_month'] ?? date('n'));
+        $defaultYear = (int)($_GET['period_year'] ?? date('Y'));
+
         $this->view('payrolls/create', [
             'title'     => 'Tambah Slip Gaji',
-            'employees' => $this->userModel->where('role', 'karyawan')
+            'employees' => $this->userModel->where('role', 'karyawan'),
+            'defaultEmployeeId' => $defaultEmployeeId,
+            'defaultMonth' => $defaultMonth,
+            'defaultYear' => $defaultYear
         ]);
     }
 
