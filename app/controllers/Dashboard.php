@@ -22,8 +22,33 @@ class Dashboard extends Controller
             'recentTransactions' => $transactionModel->getRecent(5),
             'recentOrders'       => $orderModel->getRecent(5),
             'dailySales'         => $transactionModel->getDailySales(7),
-            'pendingOrders'     => $orderModel->countByStatus('pending')
+            'pendingOrders'      => $orderModel->countByStatus('pending')
         ];
+
+        // Add payroll summary for admin
+        if ($this->auth()['role'] === 'admin') {
+            $payrollModel = $this->model('Payroll');
+            $userModel = $this->model('User');
+
+            $currentMonth = (int)date('n');
+            $currentYear = (int)date('Y');
+            $totalEmployees = count($userModel->where('role', 'karyawan'));
+            $paidCount = $payrollModel->countByPeriod($currentMonth, $currentYear, 'paid');
+            $draftCount = $payrollModel->countByPeriod($currentMonth, $currentYear, 'draft');
+            $totalPaid = $payrollModel->totalByPeriod($currentMonth, $currentYear);
+            $unpaidEmployees = $payrollModel->getUnpaidEmployees($currentMonth, $currentYear);
+
+            $data['payrollSummary'] = [
+                'month'          => $currentMonth,
+                'year'           => $currentYear,
+                'totalEmployees' => $totalEmployees,
+                'paidCount'      => $paidCount,
+                'draftCount'     => $draftCount,
+                'unpaidCount'    => count($unpaidEmployees),
+                'totalPaid'      => $totalPaid,
+                'unpaidList'     => array_slice($unpaidEmployees, 0, 3)
+            ];
+        }
 
         $this->view('dashboard/index', $data);
     }

@@ -56,6 +56,60 @@
     </div>
 </div>
 
+<!-- Payroll Summary (Admin Only) -->
+<?php if (isset($payrollSummary)): ?>
+<div class="row mb-4">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                <div class="card-title mb-0">
+                    <h5 class="m-0 me-2">Penggajian Bulan Ini</h5>
+                    <small class="text-muted"><?= date('F Y', mktime(0, 0, 0, $payrollSummary['month'], 1, $payrollSummary['year'])) ?></small>
+                </div>
+                <a href="<?= BASE_URL ?>payrolls" class="btn btn-sm btn-outline-primary">
+                    <i class="bx bx-money-withdraw me-1"></i> Kelola Gaji
+                </a>
+            </div>
+            <div class="card-body mt-3">
+                <div class="row text-center">
+                    <div class="col-md-3 border-end">
+                        <h3 class="mb-1 fw-bold text-primary"><?= $payrollSummary['totalEmployees'] ?></h3>
+                        <p class="mb-0 text-muted">Total Karyawan</p>
+                    </div>
+                    <div class="col-md-3 border-end">
+                        <h3 class="mb-1 fw-bold text-success"><?= $payrollSummary['paidCount'] ?></h3>
+                        <p class="mb-0 text-muted">Sudah Dibayar</p>
+                    </div>
+                    <div class="col-md-3 border-end">
+                        <h3 class="mb-1 fw-bold text-warning"><?= $payrollSummary['draftCount'] + $payrollSummary['unpaidCount'] ?></h3>
+                        <p class="mb-0 text-muted">Belum Dibayar</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="mb-1 fw-bold text-info">Rp <?= number_format($payrollSummary['totalPaid'], 0, ',', '.') ?></h3>
+                        <p class="mb-0 text-muted">Total Dibayar</p>
+                    </div>
+                </div>
+
+                <?php if (!empty($payrollSummary['unpaidList'])): ?>
+                    <hr class="my-3">
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                        <small class="text-muted">
+                            <i class="bx bx-info-circle me-1"></i>Karyawan belum digaji:
+                        </small>
+                        <?php foreach ($payrollSummary['unpaidList'] as $emp): ?>
+                            <span class="badge bg-label-danger"><?= htmlspecialchars($emp->name) ?></span>
+                        <?php endforeach; ?>
+                        <?php if ($payrollSummary['unpaidCount'] > 3): ?>
+                            <span class="badge bg-label-secondary">+<?= $payrollSummary['unpaidCount'] - 3 ?> lainnya</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <div class="row">
     <!-- Sales Chart -->
     <div class="col-lg-8 mb-4 order-0">

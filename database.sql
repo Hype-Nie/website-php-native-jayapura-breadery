@@ -151,6 +151,30 @@ CREATE TABLE IF NOT EXISTS customer_order_items (
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Payroll / Penggajian Karyawan
+CREATE TABLE IF NOT EXISTS payrolls (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT NOT NULL,
+    period_month INT NOT NULL,
+    period_year INT NOT NULL,
+    base_salary DECIMAL(12,0) NOT NULL DEFAULT 0,
+    allowance DECIMAL(12,0) NOT NULL DEFAULT 0,
+    deduction DECIMAL(12,0) NOT NULL DEFAULT 0,
+    bonus DECIMAL(12,0) NOT NULL DEFAULT 0,
+    total_salary DECIMAL(12,0) NOT NULL DEFAULT 0,
+    payment_date DATE DEFAULT NULL,
+    transfer_proof VARCHAR(255) DEFAULT NULL,
+    status ENUM('draft','paid') NOT NULL DEFAULT 'draft',
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_employee (employee_id),
+    INDEX idx_period (period_month, period_year),
+    INDEX idx_status (status),
+    FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_period_employee (period_month, period_year, employee_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Default users (password: password)
 INSERT IGNORE INTO users (name, username, email, password, role) VALUES
 ('Administrator', 'admin', 'admin@kasir.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),

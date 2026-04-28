@@ -16,7 +16,7 @@
                     type="text"
                     class="form-control border-0 shadow-none"
                     id="globalSearch"
-                    placeholder="Cari kode pesanan / nama pelanggan..."
+                    placeholder="Cari pesanan / pelanggan..."
                     aria-label="Cari pesanan..."
                     autocomplete="off" />
             </div>
