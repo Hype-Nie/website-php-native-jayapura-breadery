@@ -70,6 +70,12 @@
                     </div>
                 </div>
                 <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" for="description">Deskripsi</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="description" name="description" rows="4" placeholder="Deskripsi produk, bahan, ukuran, dll..."><?= htmlspecialchars($old['description'] ?? '') ?></textarea>
+                    </div>
+                </div>
+                <div class="row mb-3">
                     <label class="col-sm-2 col-form-label" for="price">Harga (Rp)</label>
                     <div class="col-sm-10">
                         <input type="number" class="form-control" id="price" name="price"
@@ -86,10 +92,11 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label class="col-sm-2 col-form-label" for="image">Gambar</label>
+                    <label class="col-sm-2 col-form-label" for="images">Gambar</label>
                     <div class="col-sm-10">
-                        <input type="file" class="form-control" id="image" name="image" accept="image/*" />
-                        <small class="text-muted">Format: JPG, PNG, GIF. Maks 2MB.</small>
+                        <input type="file" class="form-control" id="images" name="images[]" accept="image/*" multiple />
+                        <div id="imagePreviewContainer" class="mt-3 d-flex flex-wrap gap-2"></div>
+                        <small class="text-muted">Bisa pilih lebih dari satu foto. Format: JPG, PNG, GIF. Maks 2MB/foto.</small>
                     </div>
                 </div>
                 <div class="row justify-content-end">
@@ -145,6 +152,14 @@ $pageScripts = '
     pointer-events: none;
     z-index: 1000;
 }
+/* Hide label if radio is not checked */
+input[type="radio"][name="primary_image"] + label.radio-label {
+    display: none !important;
+}
+input[type="radio"][name="primary_image"]:checked + label.radio-label {
+    display: inline-block !important;
+}
+
 .scanner-frame {
     position: relative;
     width: 70%;
@@ -198,6 +213,58 @@ $pageScripts = '
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
 <script src="' . BASE_URL . 'assets/js/product-barcode.js"></script>
+<script>
+document.getElementById(\'images\').addEventListener(\'change\', function(e) {
+    const previewContainer = document.getElementById(\'imagePreviewContainer\');
+    previewContainer.innerHTML = \'\';
+    
+    if (this.files) {
+        Array.from(this.files).forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgWrap = document.createElement(\'div\');
+                imgWrap.className = \'new-preview text-center p-2 border rounded bg-light\';
+                imgWrap.style.width = \'100px\';
+                
+                const img = document.createElement(\'img\');
+                img.src = e.target.result;
+                img.style.width = \'80px\';
+                img.style.height = \'80px\';
+                img.style.objectFit = \'cover\';
+                img.style.borderRadius = \'8px\';
+                img.className = \'mb-2\';
+                
+                const radioWrap = document.createElement(\'div\');
+                radioWrap.className = \'form-check d-flex justify-content-center m-0 p-0\';
+                radioWrap.innerHTML = `<input class="form-check-input m-0" style="cursor: pointer;" type="radio" name="primary_image" id="prim_new_${index}" value="__NEW_${index}__" ${index === 0 ? \'checked\' : \'\'}>
+                                       <label class="form-check-label ms-1 text-primary fw-bold radio-label" style="font-size: 0.75rem; cursor: pointer;" for="prim_new_${index}">Utama</label>`;
+                
+                radioWrap.querySelector(\'input\').addEventListener(\'change\', updatePrimaryBorders);
+                
+                imgWrap.appendChild(img);
+                imgWrap.appendChild(radioWrap);
+                previewContainer.appendChild(imgWrap);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+});
+
+function updatePrimaryBorders() {
+    document.querySelectorAll(\'#imagePreviewContainer > div\').forEach(div => {
+        const radio = div.querySelector(\'input[type="radio"]\');
+        if (radio && radio.checked) {
+            div.classList.add(\'border-primary\', \'bg-light\');
+        } else {
+            div.classList.remove(\'border-primary\', \'bg-light\');
+        }
+    });
+}
+// Attach to existing radios if any
+document.querySelectorAll(\'#imagePreviewContainer input[type="radio"]\').forEach(radio => {
+    radio.addEventListener(\'change\', updatePrimaryBorders);
+});
+</script>
 ';
 include '../app/views/layouts/header.php';
 ?>

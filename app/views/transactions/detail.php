@@ -3,7 +3,13 @@
 <?php if ($transaction): ?>
     <div class="card mb-4">
         <div class="card-header d-flex align-items-center justify-content-between">
-            <h5 class="mb-0">Informasi Transaksi</h5>
+            <div>
+                <div class="d-none d-print-block mb-3">
+                    <img src="<?= BASE_URL ?>assets/img/logo/logo.png" alt="Logo" style="height: 60px; margin-bottom: 5px;">
+                    <h4 class="mb-0"><?= APP_NAME ?></h4>
+                </div>
+                <h5 class="mb-0">Informasi Transaksi</h5>
+            </div>
             <div>
                 <button class="btn btn-outline-secondary btn-sm me-2" onclick="window.print()">
                     <i class="bx bx-printer me-1"></i> Cetak Struk

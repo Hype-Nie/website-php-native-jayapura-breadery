@@ -2,6 +2,11 @@
 public/assets/img/products/*
 !public/assets/img/products/.gitkeep
 
+# Payroll transfer proof images - uploaded by admin (DONT COMMIT)
+public/assets/img/payrolls/*
+!public/assets/img/payrolls/.gitkeep
+!public/assets/img/payrolls/.htaccess
+
 # uploads
 storage/*.jpg
 storage/*.png

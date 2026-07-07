@@ -51,23 +51,18 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item" href="<?= BASE_URL ?>users/edit/<?= $u->id ?>">
-                                            <i class="bx bx-edit-alt me-1"></i> Edit
-                                        </a>
-                                        <?php if ((int)$u->id !== $currentUserId): ?>
-                                            <form method="POST" action="<?= BASE_URL ?>users/delete/<?= $u->id ?>"
-                                                onsubmit="return confirm('Yakin ingin menghapus user ini?')">
-                                                <button type="submit" class="dropdown-item text-danger">
-                                                    <i class="bx bx-trash me-1"></i> Hapus
-                                                </button>
-                                            </form>
-                                        <?php endif; ?>
-                                    </div>
+                                <div class="d-flex gap-1">
+                                    <a href="<?= BASE_URL ?>users/edit/<?= $u->id ?>" class="btn btn-sm btn-icon btn-outline-primary" title="Edit">
+                                        <i class="bx bx-edit-alt"></i>
+                                    </a>
+                                    <?php if ((int)$u->id !== $currentUserId): ?>
+                                        <form method="POST" action="<?= BASE_URL ?>users/delete/<?= $u->id ?>" class="d-inline">
+                                            <button type="button" class="btn btn-sm btn-icon btn-outline-danger" title="Hapus"
+                                                onclick="showCustomConfirm('Yakin ingin menghapus user ini?', () => this.closest('form').submit())">
+                                                <i class="bx bx-trash"></i>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>

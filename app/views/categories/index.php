@@ -44,21 +44,16 @@
                             <td><span class="badge bg-label-primary"><?= $cat->product_count ?? 0 ?></span></td>
                             <?php if (($_SESSION['user']['role'] ?? '') === 'admin'): ?>
                                 <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                            <i class="bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="<?= BASE_URL ?>categories/edit/<?= $cat->id ?>">
-                                                <i class="bx bx-edit-alt me-1"></i> Edit
-                                            </a>
-                                            <form method="POST" action="<?= BASE_URL ?>categories/delete/<?= $cat->id ?>"
-                                                onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
-                                                <button type="submit" class="dropdown-item text-danger">
-                                                    <i class="bx bx-trash me-1"></i> Hapus
-                                                </button>
-                                            </form>
-                                        </div>
+                                    <div class="d-flex gap-1">
+                                        <a href="<?= BASE_URL ?>categories/edit/<?= $cat->id ?>" class="btn btn-sm btn-icon btn-outline-primary" title="Edit">
+                                            <i class="bx bx-edit-alt"></i>
+                                        </a>
+                                        <form method="POST" action="<?= BASE_URL ?>categories/delete/<?= $cat->id ?>" class="d-inline">
+                                            <button type="button" class="btn btn-sm btn-icon btn-outline-danger" title="Hapus"
+                                                onclick="showCustomConfirm('Yakin ingin menghapus kategori ini?', () => this.closest('form').submit())">
+                                                <i class="bx bx-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             <?php endif; ?>

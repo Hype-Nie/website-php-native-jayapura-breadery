@@ -5,6 +5,10 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
+                    <div class="d-none d-print-block mb-3">
+                        <img src="<?= BASE_URL ?>assets/img/logo/logo.png" alt="Logo" style="height: 60px; margin-bottom: 5px;">
+                        <h4 class="mb-0 brand-text-3d" style="font-size: 24px !important;">TBJ</h4>
+                    </div>
                     <h5 class="mb-0">Pesanan: <?= htmlspecialchars($order->order_code) ?></h5>
                     <small class="text-muted"><?= date('d/m/Y H:i', strtotime($order->created_at)) ?></small>
                     &nbsp;
@@ -126,8 +130,8 @@
                         <label class="form-label">Kembalian</label>
                         <div class="fw-bold text-success fs-5" id="changeDisplay">Rp 0</div>
                     </div>
-                    <button type="submit" class="btn btn-success w-100"
-                        onclick="return confirm('Proses pembayaran ini? Stok akan dikurangi.')">
+                    <button type="button" class="btn btn-success w-100"
+                        onclick="showCustomConfirm('Proses pembayaran ini? Stok akan dikurangi.', () => this.closest('form').submit())">
                         <i class="bx bx-check-circle me-1"></i> Proses Bayar
                     </button>
                 </form>
@@ -138,8 +142,8 @@
             <div class="card-body">
                 <form method="POST" action="<?= BASE_URL ?>orders/cancel">
                     <input type="hidden" name="id" value="<?= $order->id ?>" />
-                    <button type="submit" class="btn btn-outline-danger w-100"
-                        onclick="return confirm('Batalkan pesanan ini?')">
+                    <button type="button" class="btn btn-outline-danger w-100"
+                        onclick="showCustomConfirm('Batalkan pesanan ini?', () => this.closest('form').submit())">
                         <i class="bx bx-x me-1"></i> Batalkan Pesanan
                     </button>
                 </form>
@@ -264,9 +268,9 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'POST',
             body: formData
         }).then(function(r) { return r.json(); })
-          .then(function(data) {
-            if (data.success) location.reload();
-            else alert(data.message || 'Gagal menambah produk');
+          .then(data => {
+              if (data.success) location.reload();
+              else showGlobalToast(data.message || 'Gagal menambah produk', 'danger');
           });
     }
 
@@ -301,9 +305,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData
             }).then(function(r) { return r.json(); })
-              .then(function(data) {
-                if (data.success) location.reload();
-                else alert(data.message || 'Gagal update jumlah');
+              .then(data => {
+                  if (data.success) location.reload();
+                  else showGlobalToast(data.message || 'Gagal update jumlah', 'danger');
               });
         });
     });

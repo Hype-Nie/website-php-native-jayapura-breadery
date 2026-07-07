@@ -16,7 +16,7 @@
                     type="text"
                     class="form-control border-0 shadow-none"
                     id="globalSearch"
-                    placeholder="Cari kode pesanan / nama pelanggan..."
+                    placeholder="Cari pesanan / pelanggan..."
                     aria-label="Cari pesanan..."
                     autocomplete="off" />
             </div>
@@ -65,7 +65,7 @@
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="<?= BASE_URL ?>auth/logout">
+                        <a class="dropdown-item text-danger" href="<?= BASE_URL ?>auth/logout">
                             <i class="bx bx-power-off me-2"></i>
                             <span class="align-middle">Logout</span>
                         </a>

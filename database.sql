@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS products (
     name VARCHAR(255) NOT NULL,
     category_id INT DEFAULT NULL,
     category VARCHAR(100) DEFAULT '',
+    description TEXT,
     price DECIMAL(12,0) NOT NULL DEFAULT 0,
     stock INT NOT NULL DEFAULT 0,
     image VARCHAR(255) DEFAULT '',
@@ -50,6 +51,15 @@ CREATE TABLE IF NOT EXISTS products (
     INDEX idx_barcode (barcode),
     INDEX idx_category_id (category_id),
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Product Images
+CREATE TABLE IF NOT EXISTS product_images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Sales Transactions
@@ -114,6 +124,7 @@ CREATE TABLE IF NOT EXISTS customers (
     phone VARCHAR(20) DEFAULT '',
     email VARCHAR(150) DEFAULT '',
     address TEXT,
+    order_count INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -149,6 +160,30 @@ CREATE TABLE IF NOT EXISTS customer_order_items (
     subtotal DECIMAL(12,0) NOT NULL DEFAULT 0,
     FOREIGN KEY (order_id) REFERENCES customer_orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Payroll / Penggajian Karyawan
+CREATE TABLE IF NOT EXISTS payrolls (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT NOT NULL,
+    period_month INT NOT NULL,
+    period_year INT NOT NULL,
+    base_salary DECIMAL(12,0) NOT NULL DEFAULT 0,
+    allowance DECIMAL(12,0) NOT NULL DEFAULT 0,
+    deduction DECIMAL(12,0) NOT NULL DEFAULT 0,
+    bonus DECIMAL(12,0) NOT NULL DEFAULT 0,
+    total_salary DECIMAL(12,0) NOT NULL DEFAULT 0,
+    payment_date DATE DEFAULT NULL,
+    transfer_proof VARCHAR(255) DEFAULT NULL,
+    status ENUM('draft','paid') NOT NULL DEFAULT 'draft',
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_employee (employee_id),
+    INDEX idx_period (period_month, period_year),
+    INDEX idx_status (status),
+    FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_period_employee (period_month, period_year, employee_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Default users (password: password)
@@ -190,3 +225,17 @@ INSERT IGNORE INTO products (barcode, name, category_id, category, price, stock)
 ('MRC001', 'Kaos Logo The Beadery (M)', 4, 'Merchandise', 120000, 25),
 ('MRC002', 'Tote Bag Canvas', 4, 'Merchandise', 85000, 35),
 ('MRC003', 'Sticker Pack Beadery', 4, 'Merchandise', 15000, 200);
+
+-- Hero Slides
+CREATE TABLE IF NOT EXISTS hero_slides (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    image VARCHAR(255) NOT NULL,
+    cta_url VARCHAR(255) DEFAULT '/catalog',
+    sort_order INT DEFAULT 0,
+    is_active TINYINT DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT IGNORE INTO hero_slides (image, cta_url, sort_order, is_active) VALUES 
+('man-with-laptop-light.png', '/catalog', 1, 1);

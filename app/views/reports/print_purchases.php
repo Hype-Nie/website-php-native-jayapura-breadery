@@ -97,11 +97,14 @@
                 margin: 15mm;
             }
         }
+        
+        }
     </style>
 </head>
 
 <body onload="window.print()">
     <div class="header">
+        <img src="<?= BASE_URL ?>assets/img/logo/logo.png" alt="Logo" style="height: 50px; margin-bottom: 5px;">
         <h1><?= APP_NAME ?></h1>
         <h2>Laporan Pembelian</h2>
     </div>

@@ -5,9 +5,9 @@
             <span class="app-brand-logo demo">
                 <img src="<?= BASE_URL ?>assets/img/logo/logo.png" alt="<?= APP_NAME ?>" width="42" height="42" style="border-radius:50%;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,0.08);" loading="eager" fetchpriority="high" decoding="async" />
             </span>
-            <div class="app-brand-text-wrapper demo">
-                <span class="app-brand-text demo menu-text fw-bolder"><?= APP_NAME ?></span>
-                <div class="app-brand-subtitle demo">by Cicipung</div>
+            <div class="app-brand-text-wrapper ms-2" style="white-space: normal; line-height: 1.2;">
+                <span class="app-brand-text demo menu-text fw-bolder" style="font-size: 1.1rem;"><?= APP_NAME ?></span>
+                <div class="app-brand-subtitle text-muted" style="font-size: 0.75rem;">by Cicipung</div>
             </div>
         </a>
 
@@ -96,6 +96,15 @@
             </a>
         </li>
 
+        <?php if ($role === 'admin'): ?>
+        <li class="menu-item <?= in_array($t, ['Daftar Hero Slide', 'Tambah Hero Slide', 'Edit Hero Slide']) ? 'active' : '' ?>">
+            <a href="<?= BASE_URL ?>heroslides" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-carousel"></i>
+                <div>Hero Slides</div>
+            </a>
+        </li>
+        <?php endif; ?>
+
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Laporan</span>
         </li>
@@ -115,6 +124,17 @@
         </li>
 
         <?php if ($role === 'admin'): ?>
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Penggajian</span>
+        </li>
+
+        <li class="menu-item <?= in_array($t, ['Daftar Gaji', 'Tambah Slip Gaji', 'Edit Slip Gaji']) ? 'active' : '' ?>">
+            <a href="<?= BASE_URL ?>payrolls" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-wallet"></i>
+                <div>Daftar Gaji</div>
+            </a>
+        </li>
+
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Pengaturan</span>
         </li>

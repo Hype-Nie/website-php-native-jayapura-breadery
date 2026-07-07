@@ -64,31 +64,26 @@
                                 <?php endif; ?>
                             </td>
                             <td class="text-nowrap">
-                                <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item" href="<?= BASE_URL ?>orders/detail/<?= $order->id ?>">
-                                            <i class="bx bx-show me-1"></i> Detail
-                                        </a>
-                                        <?php if ($order->status === 'pending'): ?>
-                                            <form method="POST" action="<?= BASE_URL ?>orders/markPaid" class="d-inline">
-                                                <input type="hidden" name="id" value="<?= $order->id ?>">
-                                                <button type="submit" class="dropdown-item text-success"
-                                                    onclick="return confirm('Proses pembayaran dan kurangi stok?')">
-                                                    <i class="bx bx-check me-1"></i> Tandai Lunas
-                                                </button>
-                                            </form>
-                                            <form method="POST" action="<?= BASE_URL ?>orders/cancel" class="d-inline">
-                                                <input type="hidden" name="id" value="<?= $order->id ?>">
-                                                <button type="submit" class="dropdown-item text-danger"
-                                                    onclick="return confirm('Batalkan pesanan ini?')">
-                                                    <i class="bx bx-x me-1"></i> Batalkan
-                                                </button>
-                                            </form>
-                                        <?php endif; ?>
-                                    </div>
+                                <div class="d-flex gap-1">
+                                    <a href="<?= BASE_URL ?>orders/detail/<?= $order->id ?>" class="btn btn-sm btn-icon btn-outline-info" title="Detail">
+                                        <i class="bx bx-show"></i>
+                                    </a>
+                                    <?php if ($order->status === 'pending'): ?>
+                                        <form method="POST" action="<?= BASE_URL ?>orders/markPaid" class="d-inline">
+                                            <input type="hidden" name="id" value="<?= $order->id ?>">
+                                            <button type="button" class="btn btn-sm btn-icon btn-outline-success" title="Tandai Lunas"
+                                                onclick="showCustomConfirm('Proses pembayaran dan kurangi stok?', () => this.closest('form').submit())">
+                                                <i class="bx bx-check"></i>
+                                            </button>
+                                        </form>
+                                        <form method="POST" action="<?= BASE_URL ?>orders/cancel" class="d-inline">
+                                            <input type="hidden" name="id" value="<?= $order->id ?>">
+                                            <button type="button" class="btn btn-sm btn-icon btn-outline-danger" title="Batalkan"
+                                                onclick="showCustomConfirm('Batalkan pesanan ini?', () => this.closest('form').submit())">
+                                                <i class="bx bx-x"></i>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>

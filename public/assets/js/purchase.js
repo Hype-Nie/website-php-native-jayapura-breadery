@@ -207,7 +207,7 @@
           '<button class="btn btn-outline-secondary" type="button" data-act="dec" data-id="' +
           item.id +
           '"><i class="bx bx-minus"></i></button>' +
-          '<input type="number" class="form-control text-center qty-input" value="' +
+          '<input type="text" class="form-control text-center qty-input" readonly value="' +
           item.quantity +
           '" min="1" data-id="' +
           item.id +
@@ -385,11 +385,12 @@
   }
 
   function clearCart() {
-    if (!confirm("Kosongkan daftar barang?")) return;
-    cart = [];
-    renderCart();
-    updateTotals();
-    $barcode.focus();
+    showCustomConfirm("Kosongkan daftar barang?", () => {
+      cart = [];
+      renderCart();
+      updateTotals();
+      $barcode.focus();
+    });
   }
 
   /* ── Utilities ──────────────────────────────── */

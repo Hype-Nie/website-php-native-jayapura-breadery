@@ -71,21 +71,16 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item" href="<?= BASE_URL ?>products/edit/<?= $product->id ?>">
-                                            <i class="bx bx-edit-alt me-1"></i> Edit
-                                        </a>
-                                        <form method="POST" action="<?= BASE_URL ?>products/delete/<?= $product->id ?>"
-                                            onsubmit="return confirm('Yakin ingin menghapus produk ini?')" class="d-inline">
-                                            <button type="submit" class="dropdown-item text-danger">
-                                                <i class="bx bx-trash me-1"></i> Hapus
-                                            </button>
-                                        </form>
-                                    </div>
+                                <div class="d-flex gap-1">
+                                    <a href="<?= BASE_URL ?>products/edit/<?= $product->id ?>" class="btn btn-sm btn-icon btn-outline-primary" title="Edit">
+                                        <i class="bx bx-edit-alt"></i>
+                                    </a>
+                                    <form method="POST" action="<?= BASE_URL ?>products/delete/<?= $product->id ?>" class="d-inline">
+                                        <button type="button" class="btn btn-sm btn-icon btn-outline-danger" title="Hapus"
+                                            onclick="showCustomConfirm('Yakin ingin menghapus produk ini?', () => this.closest('form').submit())">
+                                            <i class="bx bx-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
