@@ -28,39 +28,7 @@
     .about-image-wrapper:hover img {
         transform: scale(1.03);
     }
-    .floating-badge {
-        position: absolute;
-        bottom: 30px;
-        left: -30px;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        padding: 20px 25px;
-        border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        z-index: 2;
-        border: 1px solid rgba(255,255,255,0.5);
-    }
-    @media (max-width: 991px) {
-        .floating-badge {
-            left: 20px;
-            right: 20px;
-            bottom: 20px;
-        }
-    }
-    .badge-icon-wrap {
-        background: var(--primary-gradient);
-        color: white;
-        width: 50px;
-        height: 50px;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-    }
+
     .feature-card {
         background: white;
         border-radius: 20px;
@@ -150,15 +118,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="floating-badge">
-                    <div class="badge-icon-wrap">
-                        <i class="bx bxs-star"></i>
-                    </div>
-                    <div>
-                        <h5 class="fw-bold mb-1">Berdiri Sejak 2023</h5>
-                        <div class="text-muted small fw-semibold">Dipercaya di Jayapura</div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
