@@ -96,6 +96,15 @@
             </a>
         </li>
 
+        <?php if ($role === 'admin'): ?>
+        <li class="menu-item <?= in_array($t, ['Daftar Hero Slide', 'Tambah Hero Slide', 'Edit Hero Slide']) ? 'active' : '' ?>">
+            <a href="<?= BASE_URL ?>heroslides" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-carousel"></i>
+                <div>Hero Slides</div>
+            </a>
+        </li>
+        <?php endif; ?>
+
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Laporan</span>
         </li>

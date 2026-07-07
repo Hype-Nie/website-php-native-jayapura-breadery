@@ -48,6 +48,22 @@ class Dashboard extends Controller
                 'totalPaid'      => $totalPaid,
                 'unpaidList'     => array_slice($unpaidEmployees, 0, 3)
             ];
+        } elseif ($this->auth()['role'] === 'karyawan') {
+            $payrollModel = $this->model('Payroll');
+            $currentMonth = (int)date('n');
+            $currentYear = (int)date('Y');
+            $employeeId = $this->auth()['id'];
+
+            $data['latestPaid'] = $payrollModel->getLatestPaid($employeeId);
+            $data['currentMonthPayroll'] = $payrollModel->getCurrentMonthStatus($employeeId, $currentMonth, $currentYear);
+
+            $showAllPayrolls = isset($_GET['show_all_payrolls']) && $_GET['show_all_payrolls'] == '1';
+            $limit = $showAllPayrolls ? 1000 : 5;
+            $data['payrollHistory'] = $payrollModel->getByEmployeeAll($employeeId, $limit);
+            $data['showAllPayrolls'] = $showAllPayrolls;
+            $data['hasMorePayrolls'] = count($payrollModel->getByEmployeeAll($employeeId, 6)) > 5;
+            $data['currentMonth'] = $currentMonth;
+            $data['currentYear'] = $currentYear;
         }
 
         $this->view('dashboard/index', $data);

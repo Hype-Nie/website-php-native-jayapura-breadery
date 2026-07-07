@@ -60,4 +60,25 @@ class Catalog extends Controller
             ]);
         }
     }
+
+    public function detail($id = null)
+    {
+        if (!$id) {
+            $this->redirect('catalog');
+        }
+
+        $product = $this->productModel->find($id);
+        if (!$product) {
+            $this->redirect('catalog');
+        }
+
+        $imgModel = $this->model('ProductImage');
+        $productImages = $imgModel->where('product_id', $id) ?: [];
+
+        $this->view('catalog/detail', [
+            'title' => $product->name,
+            'product' => $product,
+            'productImages' => $productImages
+        ]);
+    }
 }

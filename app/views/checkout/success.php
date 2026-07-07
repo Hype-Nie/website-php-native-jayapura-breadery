@@ -143,6 +143,10 @@
     <div class="row justify-content-center">
         <div class="col-lg-6">
             <div class="success-card">
+                <div class="text-center d-none d-print-block mb-4">
+                    <img src="<?= BASE_URL ?>assets/img/logo/logo.png" alt="Logo" style="height: 80px; margin-bottom: 10px;">
+                    <h3 class="fw-bold text-dark"><?= APP_NAME ?></h3>
+                </div>
                 <div class="success-icon">
                     <i class="bx bx-check-circle"></i>
                 </div>

@@ -2,12 +2,12 @@
 
 <style>
 :root {
-    --primary-color: #1E90FF;
-    --secondary-color: #F39C12;
+    --primary-color: #1B4571;
+    --secondary-color: #197B9B;
     --card-bg: #ffffff;
     --text-main: #233446;
     --text-muted: #8592a3;
-    --body-bg: #fcfcfd;
+    --body-bg: #F0F4F8;
 }
 
 .catalog-container {
@@ -26,7 +26,6 @@
     border: 1px solid #e2e8f0 !important;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
     position: relative;
-    z-index: 100;
 }
 .breadcrumb-custom {
     display: flex !important;
@@ -43,7 +42,7 @@
     list-style: none !important;
 }
 .breadcrumb-custom a {
-    color: #1E90FF !important;
+    color: #1B4571 !important;
     text-decoration: none !important;
     font-weight: 700 !important;
     font-size: 0.9rem !important;
@@ -266,17 +265,21 @@
                                 <button class="btn-preview-trigger" onclick="showImagePreview('<?= BASE_URL ?>assets/img/products/<?= $product->image ?>', '<?= htmlspecialchars(addslashes($product->name)) ?>', 'Rp <?= number_format($product->price, 0, ',', '.') ?>')">
                                     <i class="bx bx-expand"></i>
                                 </button>
-                                <img src="<?= BASE_URL ?>assets/img/products/<?= $product->image ?>" alt="<?= htmlspecialchars($product->name) ?>" class="product-img-main" loading="lazy">
+                                <a href="<?= BASE_URL ?>catalog/detail/<?= $product->id ?>">
+                                    <img src="<?= BASE_URL ?>assets/img/products/<?= $product->image ?>" alt="<?= htmlspecialchars($product->name) ?>" class="product-img-main" loading="lazy">
+                                </a>
                             <?php else: ?>
-                                <div class="product-img-main d-flex align-items-center justify-content-center bg-lighter">
+                                <a href="<?= BASE_URL ?>catalog/detail/<?= $product->id ?>" class="product-img-main d-flex align-items-center justify-content-center bg-lighter text-decoration-none">
                                     <i class="bx bx-image-alt text-muted fs-2"></i>
-                                </div>
+                                </a>
                             <?php endif; ?>
                         </div>
 
                         <div class="card-details">
                             <span class="cat-tag"><?= htmlspecialchars($product->category) ?></span>
-                            <h3 class="prod-name"><?= htmlspecialchars($product->name) ?></h3>
+                            <a href="<?= BASE_URL ?>catalog/detail/<?= $product->id ?>" class="text-decoration-none">
+                                <h3 class="prod-name" style="color: var(--text-main);"><?= htmlspecialchars($product->name) ?></h3>
+                            </a>
                             
                             <div class="price-row">
                                 <div class="prod-price">Rp <?= number_format($product->price, 0, ',', '.') ?></div>
@@ -352,12 +355,18 @@ document.addEventListener('DOMContentLoaded', function() {
         animated.style.left = startRect.left + 'px';
         animated.style.top = startRect.top + 'px';
         animated.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-        if (productImg && productImg.src) {
+        if (productImg && productImg.tagName === 'IMG' && productImg.src) {
             const img = document.createElement('img');
             img.src = productImg.src;
             img.style.width = '100%'; img.style.height = '100%'; img.style.objectFit = 'cover';
             animated.appendChild(img);
-        } else { animated.style.background = 'var(--primary-color)'; }
+        } else if (productImg) {
+            const cloned = productImg.cloneNode(true);
+            cloned.style.width = '100%'; cloned.style.height = '100%';
+            animated.appendChild(cloned);
+        } else { 
+            animated.style.background = 'var(--primary-color)'; 
+        }
         document.body.appendChild(animated);
         setTimeout(() => {
             animated.style.left = endRect.left + 'px';
@@ -389,12 +398,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 this.innerHTML = originalHtml; this.disabled = false;
                 if (data.success) {
-                    runCartAnimation(this); showToast(data.message);
+                    runCartAnimation(this);
+                    showGlobalToast(data.message, 'success');
                     const navBadge = document.getElementById('navCartCount');
                     if (navBadge) { navBadge.textContent = data.cart_count; navBadge.style.display = 'flex'; }
                     const floatingBadge = document.getElementById('cartCountBadge');
                     if (floatingBadge) { floatingBadge.textContent = data.cart_count; }
-                } else { alert(data.message); }
+                } else { showGlobalToast(data.message, 'danger'); }
             })
             .catch(() => { this.innerHTML = originalHtml; this.disabled = false; });
         });

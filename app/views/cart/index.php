@@ -211,8 +211,8 @@
                 </div>
                 
                 <div class="mt-4">
-                    <a href="<?= BASE_URL ?>cart/clear" class="btn btn-label-danger" onclick="return confirm('Kosongkan keranjang?')">
-                        <i class="bx bx-trash-alt me-1"></i> Kosongkan Keranjang
+                    <a href="#" class="btn btn-label-danger" onclick="showCustomConfirm('Kosongkan keranjang?', () => window.location.href = '<?= BASE_URL ?>cart/clear')">
+                        <i class="bx bx-trash me-1"></i> Kosongkan
                     </a>
                 </div>
             </div>
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(res => res.json())
             .then(data => {
                 if (data.success) location.reload();
-                else alert(data.message);
+                else showGlobalToast(data.message, 'danger');
             });
         });
     });
@@ -296,20 +296,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Remove Item
     document.querySelectorAll('.remove-item').forEach(btn => {
         btn.addEventListener('click', function() {
-            if (!confirm('Hapus item ini?')) return;
-            
             const id = this.dataset.id;
-            fetch('<?= BASE_URL ?>cart/remove', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: `product_id=${id}`
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) location.reload();
+            showCustomConfirm('Hapus item ini?', () => {
+                fetch('<?= BASE_URL ?>cart/remove', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: `product_id=${id}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) location.reload();
+                });
             });
         });
     });

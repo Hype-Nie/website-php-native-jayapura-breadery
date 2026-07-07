@@ -299,6 +299,7 @@
 
     <div class="container">
         <div class="header">
+            <img src="<?= BASE_URL ?>assets/img/logo/logo.png" alt="Logo" style="height: 60px; margin-bottom: 10px;">
             <h1>THE BEADERY</h1>
             <p>Jayapura, Papua</p>
         </div>
